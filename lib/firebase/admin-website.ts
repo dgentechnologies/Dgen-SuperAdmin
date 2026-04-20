@@ -28,5 +28,6 @@ function getWebsiteApp(): App {
   return websiteApp;
 }
 
-export const websiteDb = () => getFirestore(getWebsiteApp());
+export const websiteDb = () =>
+  getFirestore(getWebsiteApp(), process.env.FIREBASE_WEBSITE_DATABASE_ID ?? '(default)');
 export const websiteStorage = () => getStorage(getWebsiteApp());

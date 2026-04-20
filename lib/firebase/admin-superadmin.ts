@@ -28,4 +28,5 @@ function getSuperadminApp(): App {
 }
 
 export const superadminAuth = () => getAuth(getSuperadminApp());
-export const superadminDb = () => getFirestore(getSuperadminApp());
+export const superadminDb = () =>
+  getFirestore(getSuperadminApp(), process.env.FIREBASE_SUPERADMIN_DATABASE_ID ?? '(default)');

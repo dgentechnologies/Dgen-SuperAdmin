@@ -28,5 +28,6 @@ function getAccessApp(): App {
   return accessApp;
 }
 
-export const accessDb = () => getFirestore(getAccessApp());
+export const accessDb = () =>
+  getFirestore(getAccessApp(), process.env.FIREBASE_ACCESS_DATABASE_ID ?? '(default)');
 export const accessRealtimeDb = () => getDatabase(getAccessApp());

@@ -26,4 +26,5 @@ function getBooksApp(): App {
   return booksApp;
 }
 
-export const booksDb = () => getFirestore(getBooksApp());
+export const booksDb = () =>
+  getFirestore(getBooksApp(), process.env.FIREBASE_BOOKS_DATABASE_ID ?? '(default)');
