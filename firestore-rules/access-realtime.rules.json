@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "access_control": {
+      "remote_unlock": {
+        ".read": "auth != null && auth.token.device == true",
+        ".write": false
+      }
+    }
+  }
+}
