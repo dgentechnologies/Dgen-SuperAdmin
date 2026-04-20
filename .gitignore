@@ -13,3 +13,19 @@ Thumbs.db
 
 # Env
 .env
+.env.local
+.env*.local
+
+# Node
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Build outputs
+dist/
+coverage/
+
+# Vercel
+.vercel/
