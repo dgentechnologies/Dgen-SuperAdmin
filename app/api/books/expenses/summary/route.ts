@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const month = req.nextUrl.searchParams.get('month');
-    let query: FirebaseFirestore.Query = booksDb().collection('expenses');
+    let query = booksDb().collection('expenses');
 
     if (month) {
       query = query.where('month', '==', month);

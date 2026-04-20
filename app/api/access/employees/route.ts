@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const status = req.nextUrl.searchParams.get('status');
-    let query: FirebaseFirestore.Query = accessDb().collection('employees');
+    let query = accessDb().collection('employees');
 
     if (status) {
       query = query.where('status', '==', status);

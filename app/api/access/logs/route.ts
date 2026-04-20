@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   try {
     const employeeId = req.nextUrl.searchParams.get('employeeId');
 
-    let query: FirebaseFirestore.Query = accessDb()
+    let query = accessDb()
       .collection('access_logs')
       .orderBy('timestamp', 'desc')
       .limit(500);
