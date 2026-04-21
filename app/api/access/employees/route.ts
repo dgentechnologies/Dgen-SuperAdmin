@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import { verifySession } from '@/lib/auth/verify-session';
 import { accessDb } from '@/lib/firebase/admin-access';
 import { apiError, apiSuccess } from '@/lib/utils/api-response';
+import type { CollectionReference, Query, DocumentData } from 'firebase-admin/firestore';
 
 export async function GET(req: NextRequest) {
   const session = await verifySession();
@@ -9,7 +10,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const status = req.nextUrl.searchParams.get('status');
-    let query = accessDb().collection('employees');
+    let query: Query<DocumentData> | CollectionReference<DocumentData> = accessDb().collection('employees');
 
     if (status) {
       query = query.where('status', '==', status);
