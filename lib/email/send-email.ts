@@ -1,7 +1,5 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
-
 interface EmailPayload {
   to: string | string[];
   subject: string;
@@ -10,6 +8,7 @@ interface EmailPayload {
 }
 
 export async function sendEmail({ to, subject, html, from }: EmailPayload) {
+  const resend = new Resend(process.env.RESEND_API_KEY!);
   const { error } = await resend.emails.send({
     from: from ?? process.env.EMAIL_FROM!,
     to: Array.isArray(to) ? to : [to],
