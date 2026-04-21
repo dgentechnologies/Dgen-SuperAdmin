@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import { verifySession } from '@/lib/auth/verify-session';
 import { booksDb } from '@/lib/firebase/admin-books';
 import { apiError, apiSuccess } from '@/lib/utils/api-response';
+import type { CollectionReference, Query, DocumentData } from 'firebase-admin/firestore';
 
 export async function GET(req: NextRequest) {
   const session = await verifySession();
@@ -9,7 +10,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const month = req.nextUrl.searchParams.get('month');
-    let query = booksDb().collection('expenses');
+    let query: Query<DocumentData> | CollectionReference<DocumentData> = booksDb().collection('expenses');
 
     if (month) {
       query = query.where('month', '==', month);
