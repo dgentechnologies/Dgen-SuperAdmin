@@ -7,17 +7,6 @@ type NavItem = {
   label: string;
 };
 
-const marketingNav: NavItem[] = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/services', label: 'Services' },
-  { href: '/products', label: 'Products' },
-  { href: '/pricing', label: 'Pricing' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/contact', label: 'Contact' }
-];
-
 type NavGroup = {
   title: string;
   items: NavItem[];
@@ -50,60 +39,6 @@ const dashboardGroups: NavGroup[] = [
   }
 ];
 
-export function MarketingShell({
-  title,
-  eyebrow,
-  description,
-  children
-}: {
-  title: string;
-  eyebrow: string;
-  description: string;
-  children: ReactNode;
-}) {
-  return (
-    <main className="landing">
-      <header className="topbar">
-        <div className="brand-wrap">
-          <img src="/logo.svg" alt="DGEN logo" className="logo" />
-          <div>
-            <p className="brand-name">DGEN Technologies</p>
-            <p className="brand-sub">Unified placeholder website</p>
-          </div>
-        </div>
-        <nav className="nav" aria-label="Main navigation">
-          {marketingNav.map((item) => (
-            <Link key={item.href} href={item.href} className="nav-link">
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="top-actions">
-          <Link href="/login" className="btn btn-soft">
-            Login
-          </Link>
-          <Link href="/dashboard" className="btn btn-solid">
-            Dashboard
-          </Link>
-        </div>
-      </header>
-
-      <section className="page-hero">
-        <p className="eyebrow">{eyebrow}</p>
-        <h1>{title}</h1>
-        <p>{description}</p>
-      </section>
-
-      {children}
-
-      <footer className="footer">
-        <p>© 2026 DGEN Technologies Pvt. Ltd.</p>
-        <p>Placeholder content only. Backend wiring can be added later.</p>
-      </footer>
-    </main>
-  );
-}
-
 export function DashboardShell({
   title,
   description,
@@ -120,7 +55,7 @@ export function DashboardShell({
           <img src="/logo.svg" alt="DGEN logo" className="logo" />
           <div>
             <p className="brand-name">SuperAdmin</p>
-            <p className="brand-sub">Placeholder mode</p>
+            <p className="brand-sub">Dgen Technologies</p>
           </div>
         </div>
 
@@ -148,38 +83,10 @@ export function DashboardShell({
             <h1>{title}</h1>
             <p>{description}</p>
           </div>
-          <div className="dashboard-actions">
-            <Link href="/" className="btn btn-soft">
-              Open Website
-            </Link>
-            <Link href="/login" className="btn btn-solid">
-              Auth Placeholder
-            </Link>
-          </div>
         </header>
         {children}
       </section>
     </main>
-  );
-}
-
-export function PlaceholderCardGrid({
-  items
-}: {
-  items: Array<{ title: string; description: string }>;
-}) {
-  return (
-    <div className="grid-3">
-      {items.map((item) => (
-        <article key={item.title} className="panel reveal">
-          <h3>{item.title}</h3>
-          <p>{item.description}</p>
-          <button type="button" className="text-link">
-            Placeholder action
-          </button>
-        </article>
-      ))}
-    </div>
   );
 }
 
