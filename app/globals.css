@@ -461,6 +461,7 @@ a {
 .card {
   display: grid;
   place-items: center;
+}
 
 .module-list {
   margin: 1rem 0 0;

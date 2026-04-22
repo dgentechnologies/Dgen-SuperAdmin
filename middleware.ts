@@ -2,12 +2,6 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 export function middleware(req: NextRequest) {
-  const placeholderMode = true;
-
-  if (placeholderMode) {
-    return NextResponse.next();
-  }
-
   const cookie = req.cookies.get(
     process.env.SESSION_COOKIE_NAME ?? 'dgen_superadmin_session'
   );
@@ -26,5 +20,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login']
+  matcher: ['/dashboard/:path*', '/login', '/']
 };
