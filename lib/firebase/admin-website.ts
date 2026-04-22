@@ -1,6 +1,7 @@
 import { App, cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
+import { requireEnv } from '@/lib/utils/env';
 
 let websiteApp: App;
 
@@ -16,11 +17,11 @@ function getWebsiteApp(): App {
   websiteApp = initializeApp(
     {
       credential: cert({
-        projectId: process.env.FIREBASE_WEBSITE_PROJECT_ID!,
-        clientEmail: process.env.FIREBASE_WEBSITE_CLIENT_EMAIL!,
-        privateKey: process.env.FIREBASE_WEBSITE_PRIVATE_KEY!.replace(/\\n/g, '\n')
+        projectId: requireEnv('FIREBASE_WEBSITE_PROJECT_ID'),
+        clientEmail: requireEnv('FIREBASE_WEBSITE_CLIENT_EMAIL'),
+        privateKey: requireEnv('FIREBASE_WEBSITE_PRIVATE_KEY').replace(/\\n/g, '\n')
       }),
-      storageBucket: process.env.FIREBASE_WEBSITE_STORAGE_BUCKET!
+      storageBucket: requireEnv('FIREBASE_WEBSITE_STORAGE_BUCKET')
     },
     'website'
   );

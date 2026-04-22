@@ -1,5 +1,6 @@
 import { App, cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { requireEnv } from '@/lib/utils/env';
 
 let booksApp: App;
 
@@ -15,9 +16,9 @@ function getBooksApp(): App {
   booksApp = initializeApp(
     {
       credential: cert({
-        projectId: process.env.FIREBASE_BOOKS_PROJECT_ID!,
-        clientEmail: process.env.FIREBASE_BOOKS_CLIENT_EMAIL!,
-        privateKey: process.env.FIREBASE_BOOKS_PRIVATE_KEY!.replace(/\\n/g, '\n')
+        projectId: requireEnv('FIREBASE_BOOKS_PROJECT_ID'),
+        clientEmail: requireEnv('FIREBASE_BOOKS_CLIENT_EMAIL'),
+        privateKey: requireEnv('FIREBASE_BOOKS_PRIVATE_KEY').replace(/\\n/g, '\n')
       })
     },
     'books'

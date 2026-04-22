@@ -1,6 +1,7 @@
 import { App, cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
+import { requireEnv } from '@/lib/utils/env';
 
 let superadminApp: App;
 
@@ -16,9 +17,9 @@ function getSuperadminApp(): App {
   superadminApp = initializeApp(
     {
       credential: cert({
-        projectId: process.env.FIREBASE_SUPERADMIN_PROJECT_ID!,
-        clientEmail: process.env.FIREBASE_SUPERADMIN_CLIENT_EMAIL!,
-        privateKey: process.env.FIREBASE_SUPERADMIN_PRIVATE_KEY!.replace(/\\n/g, '\n')
+        projectId: requireEnv('FIREBASE_SUPERADMIN_PROJECT_ID'),
+        clientEmail: requireEnv('FIREBASE_SUPERADMIN_CLIENT_EMAIL'),
+        privateKey: requireEnv('FIREBASE_SUPERADMIN_PRIVATE_KEY').replace(/\\n/g, '\n')
       })
     },
     'superadmin'

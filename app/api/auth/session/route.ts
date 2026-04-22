@@ -2,10 +2,13 @@ import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { FieldValue } from 'firebase-admin/firestore';
+import { isAuthorizedSuperadmin } from '@/lib/auth/superadmin-access';
 import { superadminAuth, superadminDb } from '@/lib/firebase/admin-superadmin';
+import { getSessionCookieName } from '@/lib/utils/env';
 
 export async function POST(req: NextRequest) {
   try {
+    const sessionCookieName = getSessionCookieName();
     const body = (await req.json()) as { idToken?: string };
     if (!body.idToken) {
       return NextResponse.json({ error: 'Missing token' }, { status: 400 });
@@ -13,23 +16,9 @@ export async function POST(req: NextRequest) {
 
     const decoded = await superadminAuth().verifyIdToken(body.idToken);
 
-    // Check env-based UID allowlist first (no Firestore needed)
-    const envUids = (process.env.SUPERADMIN_UID ?? '')
-      .split(',')
-      .map((u) => u.trim())
-      .filter(Boolean);
-
-    const allowedByEnv = envUids.includes(decoded.uid);
-
-    if (!allowedByEnv) {
-      const adminDoc = await superadminDb()
-        .collection('superadmin-users')
-        .doc(decoded.uid)
-        .get();
-
-      if (!adminDoc.exists) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-      }
+    const authorized = await isAuthorizedSuperadmin(decoded.uid);
+    if (!authorized) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
     const expiresIn = 60 * 60 * 24 * 5 * 1000;
@@ -37,7 +26,7 @@ export async function POST(req: NextRequest) {
       expiresIn
     });
 
-    cookies().set(process.env.SESSION_COOKIE_NAME!, sessionCookie, {
+    cookies().set(sessionCookieName, sessionCookie, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -60,6 +49,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE() {
-  cookies().delete(process.env.SESSION_COOKIE_NAME!);
+  cookies().delete(getSessionCookieName());
   return NextResponse.json({ success: true });
 }

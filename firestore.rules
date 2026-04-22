@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Server-only collections managed through Firebase Admin SDK.
+    match /superadmin-users/{uid} {
+      allow read, write: if false;
+    }
+
+    match /audit-logs/{id} {
+      allow read, write: if false;
+    }
+
+    // Secure default for every other path in the default database.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
