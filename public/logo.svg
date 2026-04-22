@@ -1,0 +1,7 @@
+<svg width="240" height="72" viewBox="0 0 240 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="2" y="2" width="68" height="68" rx="18" fill="#0F766E"/>
+  <path d="M17 36C17 25.5066 25.5066 17 36 17H55V55H36C25.5066 55 17 46.4934 17 36Z" fill="#D8F0ED"/>
+  <path d="M55 22H48C42.4772 22 38 26.4772 38 32V40C38 45.5228 42.4772 50 48 50H55V22Z" fill="#0B5E59"/>
+  <text x="82" y="33" fill="#122023" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">DGEN</text>
+  <text x="82" y="54" fill="#4F5F64" font-family="Segoe UI, Arial, sans-serif" font-size="14">Technologies</text>
+</svg>

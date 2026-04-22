@@ -28,7 +28,7 @@ Your output is reviewed by ChatGPT for correctness, security, and architectural 
 
 ## System Architecture
 
-```
+```raw
 ┌──────────────────────────────────────────────────────────┐
 │                   VERCEL (Next.js App)                   │
 │                                                          │
@@ -87,7 +87,7 @@ Your output is reviewed by ChatGPT for correctness, security, and architectural 
 
 ## File Structure (Backend Scope)
 
-```
+```raw
 ├── app/
 │   └── api/
 │       ├── auth/
@@ -545,7 +545,7 @@ export async function sendEmail({ to, subject, html, from }: EmailPayload) {
 ## Firestore Security Rules
 
 ### `firestore-rules/superadmin.rules`
-```
+```raw
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -557,7 +557,7 @@ service cloud.firestore {
 ```
 
 ### `firestore-rules/website.rules`
-```
+```raw
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -577,7 +577,7 @@ service cloud.firestore {
 ```
 
 ### `firestore-rules/access.rules`
-```
+```raw
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -595,7 +595,7 @@ service cloud.firestore {
 ```
 
 ### `firestore-rules/books.rules`
-```
+```raw
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -626,7 +626,6 @@ Run once to bootstrap the first admin:
 ```bash
 npx ts-node --env-file=.env.local scripts/seed-superadmin.ts
 ```
-
 ```typescript
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
