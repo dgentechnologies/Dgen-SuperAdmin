@@ -14,14 +14,23 @@ function getWebsiteApp(): App {
     return websiteApp;
   }
 
+  const projectId =
+    process.env.FIREBASE_WEBSITE_PROJECT_ID?.trim() || requireEnv('FIREBASE_SUPERADMIN_PROJECT_ID');
+  const clientEmail =
+    process.env.FIREBASE_WEBSITE_CLIENT_EMAIL?.trim() || requireEnv('FIREBASE_SUPERADMIN_CLIENT_EMAIL');
+  const privateKeyRaw =
+    process.env.FIREBASE_WEBSITE_PRIVATE_KEY?.trim() || requireEnv('FIREBASE_SUPERADMIN_PRIVATE_KEY');
+  const storageBucket =
+    process.env.FIREBASE_WEBSITE_STORAGE_BUCKET?.trim() || `${projectId}.firebasestorage.app`;
+
   websiteApp = initializeApp(
     {
       credential: cert({
-        projectId: requireEnv('FIREBASE_WEBSITE_PROJECT_ID'),
-        clientEmail: requireEnv('FIREBASE_WEBSITE_CLIENT_EMAIL'),
-        privateKey: requireEnv('FIREBASE_WEBSITE_PRIVATE_KEY').replace(/\\n/g, '\n')
+        projectId,
+        clientEmail,
+        privateKey: privateKeyRaw.replace(/\\n/g, '\n')
       }),
-      storageBucket: requireEnv('FIREBASE_WEBSITE_STORAGE_BUCKET')
+      storageBucket
     },
     'website'
   );

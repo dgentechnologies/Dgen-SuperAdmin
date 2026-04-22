@@ -13,12 +13,19 @@ function getBooksApp(): App {
     return booksApp;
   }
 
+  const projectId =
+    process.env.FIREBASE_BOOKS_PROJECT_ID?.trim() || requireEnv('FIREBASE_SUPERADMIN_PROJECT_ID');
+  const clientEmail =
+    process.env.FIREBASE_BOOKS_CLIENT_EMAIL?.trim() || requireEnv('FIREBASE_SUPERADMIN_CLIENT_EMAIL');
+  const privateKeyRaw =
+    process.env.FIREBASE_BOOKS_PRIVATE_KEY?.trim() || requireEnv('FIREBASE_SUPERADMIN_PRIVATE_KEY');
+
   booksApp = initializeApp(
     {
       credential: cert({
-        projectId: requireEnv('FIREBASE_BOOKS_PROJECT_ID'),
-        clientEmail: requireEnv('FIREBASE_BOOKS_CLIENT_EMAIL'),
-        privateKey: requireEnv('FIREBASE_BOOKS_PRIVATE_KEY').replace(/\\n/g, '\n')
+        projectId,
+        clientEmail,
+        privateKey: privateKeyRaw.replace(/\\n/g, '\n')
       })
     },
     'books'

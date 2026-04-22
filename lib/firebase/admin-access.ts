@@ -14,14 +14,20 @@ function getAccessApp(): App {
     return accessApp;
   }
 
+  const projectId =
+    process.env.FIREBASE_ACCESS_PROJECT_ID?.trim() || requireEnv('FIREBASE_SUPERADMIN_PROJECT_ID');
+  const clientEmail =
+    process.env.FIREBASE_ACCESS_CLIENT_EMAIL?.trim() || requireEnv('FIREBASE_SUPERADMIN_CLIENT_EMAIL');
+  const privateKeyRaw =
+    process.env.FIREBASE_ACCESS_PRIVATE_KEY?.trim() || requireEnv('FIREBASE_SUPERADMIN_PRIVATE_KEY');
   const databaseURL = process.env.FIREBASE_ACCESS_DATABASE_URL?.trim();
 
   accessApp = initializeApp(
     {
       credential: cert({
-        projectId: requireEnv('FIREBASE_ACCESS_PROJECT_ID'),
-        clientEmail: requireEnv('FIREBASE_ACCESS_CLIENT_EMAIL'),
-        privateKey: requireEnv('FIREBASE_ACCESS_PRIVATE_KEY').replace(/\\n/g, '\n')
+        projectId,
+        clientEmail,
+        privateKey: privateKeyRaw.replace(/\\n/g, '\n')
       }),
       ...(databaseURL ? { databaseURL } : {})
     },
