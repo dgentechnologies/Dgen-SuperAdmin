@@ -34,8 +34,14 @@ function getAccessApp(): App {
   return accessApp;
 }
 
-export const accessDb = () =>
-  getFirestore(getAccessApp(), process.env.FIREBASE_ACCESS_DATABASE_ID ?? '(default)');
+export const accessDb = () => {
+  const dbId = process.env.FIREBASE_ACCESS_DATABASE_ID?.trim() || '(default)';
+  try {
+    return getFirestore(getAccessApp(), dbId);
+  } catch {
+    return getFirestore(getAccessApp(), '(default)');
+  }
+};
 
 export const accessRealtimeDb = () => {
   const databaseURL = process.env.FIREBASE_ACCESS_DATABASE_URL?.trim();

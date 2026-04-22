@@ -35,6 +35,12 @@ function getWebsiteApp(): App {
   return websiteApp;
 }
 
-export const websiteDb = () =>
-  getFirestore(getWebsiteApp(), process.env.FIREBASE_WEBSITE_DATABASE_ID ?? '(default)');
+export const websiteDb = () => {
+  const dbId = process.env.FIREBASE_WEBSITE_DATABASE_ID?.trim() || '(default)';
+  try {
+    return getFirestore(getWebsiteApp(), dbId);
+  } catch {
+    return getFirestore(getWebsiteApp(), '(default)');
+  }
+};
 export const websiteStorage = () => getStorage(getWebsiteApp());

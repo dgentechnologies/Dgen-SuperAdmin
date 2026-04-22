@@ -31,5 +31,12 @@ function getBooksApp(): App {
   return booksApp;
 }
 
-export const booksDb = () =>
-  getFirestore(getBooksApp(), process.env.FIREBASE_BOOKS_DATABASE_ID ?? '(default)');
+export const booksDb = () => {
+  const dbId = process.env.FIREBASE_BOOKS_DATABASE_ID?.trim() || '(default)';
+  try {
+    return getFirestore(getBooksApp(), dbId);
+  } catch {
+    // Named database might not exist yet – fall back to default
+    return getFirestore(getBooksApp(), '(default)');
+  }
+};
