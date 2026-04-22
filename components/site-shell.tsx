@@ -80,7 +80,7 @@ export function DashboardShell({
     <main className="dashboard-shell">
       <aside className="dashboard-sidebar">
         <div className="dashboard-brand">
-          <img src="/logo.svg" alt="DGEN logo" className="logo" />
+          <img src="/logo.png" alt="DGEN logo" className="logo" />
           <div>
             <p className="brand-name">SuperAdmin</p>
             <p className="brand-sub">Dgen Technologies</p>

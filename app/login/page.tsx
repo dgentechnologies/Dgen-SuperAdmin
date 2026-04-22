@@ -77,7 +77,7 @@ export default function LoginPage() {
   return (
     <main className="login-shell">
       <section className="login-card">
-        <img src="/logo.svg" alt="DGEN logo" className="logo login-logo" />
+        <img src="/logo.png" alt="DGEN logo" className="logo login-logo" />
         <p className="eyebrow">Admin Login</p>
         <h1>DGEN SuperAdmin</h1>
         <p>Sign in with your admin email and password.</p>
