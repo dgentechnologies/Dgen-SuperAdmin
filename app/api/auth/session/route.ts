@@ -13,13 +13,23 @@ export async function POST(req: NextRequest) {
 
     const decoded = await superadminAuth().verifyIdToken(body.idToken);
 
-    const adminDoc = await superadminDb()
-      .collection('superadmin-users')
-      .doc(decoded.uid)
-      .get();
+    // Check env-based UID allowlist first (no Firestore needed)
+    const envUids = (process.env.SUPERADMIN_UID ?? '')
+      .split(',')
+      .map((u) => u.trim())
+      .filter(Boolean);
 
-    if (!adminDoc.exists) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    const allowedByEnv = envUids.includes(decoded.uid);
+
+    if (!allowedByEnv) {
+      const adminDoc = await superadminDb()
+        .collection('superadmin-users')
+        .doc(decoded.uid)
+        .get();
+
+      if (!adminDoc.exists) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      }
     }
 
     const expiresIn = 60 * 60 * 24 * 5 * 1000;
