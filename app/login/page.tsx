@@ -3,8 +3,6 @@
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { clientAuth } from '@/lib/firebase/client-superadmin';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,33 +16,63 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
 
-    try {
-      const credential = await signInWithEmailAndPassword(clientAuth, email.trim(), password);
-      const idToken = await credential.user.getIdToken();
+    const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 
-      const response = await fetch('/api/auth/session', {
+    if (!apiKey) {
+      setError('Missing NEXT_PUBLIC_FIREBASE_API_KEY. Configure environment variables and try again.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const signInResponse = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email.trim(),
+            password,
+            returnSecureToken: true
+          })
+        }
+      );
+
+      if (!signInResponse.ok) {
+        setError('Invalid email or password.');
+        return;
+      }
+
+      const signInData = (await signInResponse.json()) as { idToken?: string };
+
+      if (!signInData.idToken) {
+        setError('Could not get ID token from Firebase Auth.');
+        return;
+      }
+
+      const sessionResponse = await fetch('/api/auth/session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ idToken })
+        body: JSON.stringify({ idToken: signInData.idToken })
       });
 
-      if (!response.ok) {
-        if (response.status === 403) {
+      if (!sessionResponse.ok) {
+        if (sessionResponse.status === 403) {
           setError('This user is authenticated, but not in superadmin-users. Ask an admin to add your UID.');
         } else {
           setError('Unable to create session. Please try again.');
         }
-
-        await clientAuth.signOut();
         return;
       }
 
       router.push('/dashboard');
       router.refresh();
     } catch {
-      setError('Invalid email or password.');
+      setError('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }

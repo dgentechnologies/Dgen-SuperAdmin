@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import type { Route } from 'next';
 import type { ReactNode } from 'react';
 
 type NavItem = {
-  href: string;
+  href: Route;
   label: string;
 };
 
@@ -17,7 +18,12 @@ const marketingNav: NavItem[] = [
   { href: '/contact', label: 'Contact' }
 ];
 
-const dashboardGroups = [
+type NavGroup = {
+  title: string;
+  items: NavItem[];
+};
+
+const dashboardGroups: NavGroup[] = [
   {
     title: 'Website',
     items: [
