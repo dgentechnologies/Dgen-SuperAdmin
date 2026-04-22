@@ -1,81 +1,15 @@
-const navItems = [
-  'Home',
-  'About',
-  'Services',
-  'Products',
-  'Pricing',
-  'Blog',
-  'FAQ',
-  'Contact'
-];
-
-const serviceCards = [
-  {
-    title: 'Strategy & Consulting',
-    description: 'Placeholder block for business strategy, workshops, and transformation planning.'
-  },
-  {
-    title: 'Product Engineering',
-    description: 'Placeholder block for full-cycle design, development, and deployment services.'
-  },
-  {
-    title: 'Cloud & DevOps',
-    description: 'Placeholder block for infrastructure, CI/CD pipelines, and release automation.'
-  },
-  {
-    title: 'AI Automation',
-    description: 'Placeholder block for AI copilots, workflow automation, and data assistants.'
-  }
-];
-
-const modules = [
-  'Website Management',
-  'Access Control',
-  'Finance Operations',
-  'Audit & Reporting'
-];
-
-const pricingPlans = [
-  { name: 'Starter', price: '$29', detail: 'For small teams and pilots' },
-  { name: 'Growth', price: '$99', detail: 'For scaling teams and departments' },
-  { name: 'Enterprise', price: 'Custom', detail: 'For advanced compliance and custom flows' }
-];
+import Link from 'next/link';
+import { MarketingShell, PlaceholderCardGrid } from '@/components/site-shell';
+import { pricingPlans, products, serviceCards } from '@/lib/placeholder-content';
 
 export default function HomePage() {
   return (
-    <main className="landing">
-      <header className="topbar">
-        <div className="brand-wrap">
-          <img src="/logo.svg" alt="DGEN logo" className="logo" />
-          <div>
-            <p className="brand-name">DGEN Technologies</p>
-            <p className="brand-sub">Future-ready digital systems</p>
-          </div>
-        </div>
-        <nav className="nav">
-          {navItems.map((item) => (
-            <a key={item} href="#" className="nav-link">
-              {item}
-            </a>
-          ))}
-        </nav>
-        <div className="top-actions">
-          <a href="/login" className="btn btn-soft">
-            Login
-          </a>
-          <a href="/dashboard" className="btn btn-solid">
-            Dashboard
-          </a>
-        </div>
-      </header>
-
+    <MarketingShell
+      eyebrow="Placeholder Landing Page"
+      title="One platform, every operation, fully visible."
+      description="This is a complete placeholder website layout with connected navigation, multiple inner pages, and a browsable dashboard shell."
+    >
       <section className="hero" id="home">
-        <p className="eyebrow">Placeholder Landing Page</p>
-        <h1>One platform, every operation, fully visible.</h1>
-        <p>
-          This is your first full website layout with connected navigation, modern sections, and
-          placeholder data. Backend integration is intentionally not connected yet.
-        </p>
         <div className="hero-actions">
           <button type="button" className="btn btn-solid">
             Start Free Trial (Placeholder)
@@ -105,17 +39,7 @@ export default function HomePage() {
           <p className="eyebrow">Services</p>
           <h2>Everything you need to launch and scale</h2>
         </div>
-        <div className="grid-4">
-          {serviceCards.map((card) => (
-            <article key={card.title} className="panel reveal">
-              <h3>{card.title}</h3>
-              <p>{card.description}</p>
-              <button type="button" className="text-link">
-                Explore Option
-              </button>
-            </article>
-          ))}
-        </div>
+        <PlaceholderCardGrid items={serviceCards} />
       </section>
 
       <section className="section split" id="products">
@@ -123,8 +47,8 @@ export default function HomePage() {
           <p className="eyebrow">Platform Modules</p>
           <h2>Built as independent blocks, managed in one place</h2>
           <ul className="module-list">
-            {modules.map((item) => (
-              <li key={item}>{item} (Placeholder)</li>
+            {products.map((item) => (
+              <li key={item.title}>{item.title} (Placeholder)</li>
             ))}
           </ul>
         </article>
@@ -160,18 +84,7 @@ export default function HomePage() {
           <p className="eyebrow">Pricing</p>
           <h2>Simple plans for placeholders today, production tomorrow</h2>
         </div>
-        <div className="grid-3">
-          {pricingPlans.map((plan) => (
-            <article key={plan.name} className="panel">
-              <h3>{plan.name}</h3>
-              <p className="price">{plan.price}</p>
-              <p>{plan.detail}</p>
-              <button type="button" className="btn btn-soft full">
-                Choose Plan
-              </button>
-            </article>
-          ))}
-        </div>
+        <PlaceholderCardGrid items={pricingPlans} />
       </section>
 
       <section className="section" id="faq">
@@ -198,15 +111,10 @@ export default function HomePage() {
       <section className="section cta" id="contact">
         <h2>Ready to connect this UI to production data?</h2>
         <p>Use the existing API routes to wire each placeholder card when you are ready.</p>
-        <button type="button" className="btn btn-solid">
+        <Link href="/contact" className="btn btn-solid">
           Contact Sales (Placeholder)
-        </button>
+        </Link>
       </section>
-
-      <footer className="footer">
-        <p>© {new Date().getFullYear()} DGEN Technologies Pvt. Ltd.</p>
-        <p>All links and content currently use placeholders.</p>
-      </footer>
-    </main>
+    </MarketingShell>
   );
 }
