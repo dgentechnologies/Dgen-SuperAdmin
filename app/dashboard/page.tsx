@@ -33,6 +33,10 @@ interface ModuleHealth {
   books: 'ok' | 'error';
 }
 
+function failedResult<T>(): ApiResult<T> {
+  return { success: false };
+}
+
 export default function DashboardPage() {
   const [posts, setPosts] = useState<WebsitePost[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -61,10 +65,12 @@ export default function DashboardPage() {
       };
 
       const [postsBody, employeesBody, summaryBody, applicationsBody] = await Promise.all([
-        postsRes.ok ? (postsRes.json() as Promise<ApiResult<WebsitePost[]>>) : Promise.resolve({ success: false }),
-        employeesRes.ok ? (employeesRes.json() as Promise<ApiResult<Employee[]>>) : Promise.resolve({ success: false }),
-        summaryRes.ok ? (summaryRes.json() as Promise<ApiResult<ExpenseSummary>>) : Promise.resolve({ success: false }),
-        applicationsRes.ok ? (applicationsRes.json() as Promise<ApiResult<Application[]>>) : Promise.resolve({ success: false })
+        postsRes.ok ? (postsRes.json() as Promise<ApiResult<WebsitePost[]>>) : Promise.resolve(failedResult<WebsitePost[]>()),
+        employeesRes.ok ? (employeesRes.json() as Promise<ApiResult<Employee[]>>) : Promise.resolve(failedResult<Employee[]>()),
+        summaryRes.ok ? (summaryRes.json() as Promise<ApiResult<ExpenseSummary>>) : Promise.resolve(failedResult<ExpenseSummary>()),
+        applicationsRes.ok
+          ? (applicationsRes.json() as Promise<ApiResult<Application[]>>)
+          : Promise.resolve(failedResult<Application[]>())
       ]);
 
       if (!cancelled) {
