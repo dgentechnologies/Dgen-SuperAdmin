@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import type { Route } from 'next';
-import type { ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 type NavItem = {
   href: Route;
@@ -42,12 +45,37 @@ const dashboardGroups: NavGroup[] = [
 export function DashboardShell({
   title,
   description,
-  children
+  children,
+  adminEmail,
+  badges
 }: {
   title: string;
   description: string;
   children: ReactNode;
+  adminEmail?: string;
+  badges?: Partial<Record<string, number>>;
 }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [signingOut, setSigningOut] = useState(false);
+  const dateLabel = useMemo(
+    () => new Intl.DateTimeFormat('en-IN', { dateStyle: 'full' }).format(new Date()),
+    []
+  );
+
+  const handleSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+
+    try {
+      await fetch('/api/auth/session', { method: 'DELETE' });
+      router.push('/login');
+      router.refresh();
+    } finally {
+      setSigningOut(false);
+    }
+  };
+
   return (
     <main className="dashboard-shell">
       <aside className="dashboard-sidebar">
@@ -60,31 +88,58 @@ export function DashboardShell({
         </div>
 
         <nav className="dashboard-nav" aria-label="Dashboard navigation">
-          <Link href="/dashboard" className="dashboard-link dashboard-link-strong">
+          <Link
+            href="/dashboard"
+            className={`dashboard-link ${pathname === '/dashboard' ? 'dashboard-link-active' : 'dashboard-link-strong'}`}
+          >
             Overview
           </Link>
           {dashboardGroups.map((group) => (
             <div key={group.title} className="dashboard-group">
               <p>{group.title}</p>
               {group.items.map((item) => (
-                <Link key={item.href} href={item.href} className="dashboard-link">
-                  {item.label}
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`dashboard-link ${pathname.startsWith(item.href) ? 'dashboard-link-active' : ''}`}
+                >
+                  <span>{item.label}</span>
+                  {badges?.[item.href] ? <span className="dashboard-badge">{badges[item.href]}</span> : null}
                 </Link>
               ))}
             </div>
           ))}
         </nav>
+
+        <div className="dashboard-aside-footer">
+          <div className="dashboard-admin">
+            <div>
+              <strong>Signed in</strong>
+              <small>{adminEmail ?? 'Authenticated SuperAdmin'}</small>
+            </div>
+            <span className="status-pill status-ok">Secure</span>
+          </div>
+          <button type="button" className="btn btn-soft full" onClick={handleSignOut} disabled={signingOut}>
+            {signingOut ? 'Signing out…' : 'Sign out'}
+          </button>
+        </div>
       </aside>
 
       <section className="dashboard-main">
-        <header className="dashboard-header">
-          <div>
-            <p className="eyebrow">Dashboard</p>
-            <h1>{title}</h1>
-            <p>{description}</p>
-          </div>
-        </header>
-        {children}
+        <div className="dashboard-frame">
+          <header className="dashboard-header">
+            <div>
+              <p className="eyebrow">Dashboard</p>
+              <h1>{title}</h1>
+              <p>{description}</p>
+            </div>
+            <div className="dashboard-header-meta">
+              <span>{dateLabel}</span>
+              <span className="status-pill status-ok">Live database views</span>
+            </div>
+          </header>
+          <div className="dashboard-content">{children}</div>
+        </div>
       </section>
     </main>
   );
