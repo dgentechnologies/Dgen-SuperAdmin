@@ -1,11 +1,14 @@
 import type { NextRequest } from 'next/server';
 import { FieldValue } from 'firebase-admin/firestore';
+import type { DocumentReference, DocumentData } from 'firebase-admin/firestore';
 import { verifySession } from '@/lib/auth/verify-session';
 import { sendEmail } from '@/lib/email/send-email';
 import { websiteDb } from '@/lib/firebase/admin-website';
 import { superadminDb } from '@/lib/firebase/admin-superadmin';
 import { assignApplicationSchema } from '@/lib/schemas/application.schema';
 import { apiError, apiSuccess } from '@/lib/utils/api-response';
+
+const APPLICATION_COLLECTIONS = ['applications', 'jobApplications'] as const;
 
 interface RouteContext {
   params: { id: string };
@@ -21,9 +24,20 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
   const { employeeId, employeeName, employeeEmail, note, startDate } = parsed.data;
 
   try {
-    const appRef = websiteDb().collection('applications').doc(params.id);
-    const appDoc = await appRef.get();
-    if (!appDoc.exists) return apiError('Application not found', 404);
+    let appRef: DocumentReference<DocumentData> | null = null;
+    let appDoc = null;
+
+    for (const collectionName of APPLICATION_COLLECTIONS) {
+      const candidateRef = websiteDb().collection(collectionName).doc(params.id);
+      const candidateDoc = await candidateRef.get();
+      if (candidateDoc.exists) {
+        appRef = candidateRef;
+        appDoc = candidateDoc;
+        break;
+      }
+    }
+
+    if (!appRef || !appDoc) return apiError('Application not found', 404);
 
     const app = appDoc.data();
 

@@ -14,12 +14,9 @@ function getWebsiteApp(): App {
     return websiteApp;
   }
 
-  const projectId =
-    process.env.FIREBASE_WEBSITE_PROJECT_ID?.trim() || requireEnv('FIREBASE_SUPERADMIN_PROJECT_ID');
-  const clientEmail =
-    process.env.FIREBASE_WEBSITE_CLIENT_EMAIL?.trim() || requireEnv('FIREBASE_SUPERADMIN_CLIENT_EMAIL');
-  const privateKeyRaw =
-    process.env.FIREBASE_WEBSITE_PRIVATE_KEY?.trim() || requireEnv('FIREBASE_SUPERADMIN_PRIVATE_KEY');
+  const projectId = requireEnv('FIREBASE_WEBSITE_PROJECT_ID').trim();
+  const clientEmail = requireEnv('FIREBASE_WEBSITE_CLIENT_EMAIL').trim();
+  const privateKeyRaw = requireEnv('FIREBASE_WEBSITE_PRIVATE_KEY').trim();
   const storageBucket =
     process.env.FIREBASE_WEBSITE_STORAGE_BUCKET?.trim() || `${projectId}.firebasestorage.app`;
 

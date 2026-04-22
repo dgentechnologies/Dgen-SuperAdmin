@@ -13,12 +13,9 @@ function getBooksApp(): App {
     return booksApp;
   }
 
-  const projectId =
-    process.env.FIREBASE_BOOKS_PROJECT_ID?.trim() || requireEnv('FIREBASE_SUPERADMIN_PROJECT_ID');
-  const clientEmail =
-    process.env.FIREBASE_BOOKS_CLIENT_EMAIL?.trim() || requireEnv('FIREBASE_SUPERADMIN_CLIENT_EMAIL');
-  const privateKeyRaw =
-    process.env.FIREBASE_BOOKS_PRIVATE_KEY?.trim() || requireEnv('FIREBASE_SUPERADMIN_PRIVATE_KEY');
+  const projectId = requireEnv('FIREBASE_BOOKS_PROJECT_ID').trim();
+  const clientEmail = requireEnv('FIREBASE_BOOKS_CLIENT_EMAIL').trim();
+  const privateKeyRaw = requireEnv('FIREBASE_BOOKS_PRIVATE_KEY').trim();
 
   booksApp = initializeApp(
     {

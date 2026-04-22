@@ -14,12 +14,9 @@ function getAccessApp(): App {
     return accessApp;
   }
 
-  const projectId =
-    process.env.FIREBASE_ACCESS_PROJECT_ID?.trim() || requireEnv('FIREBASE_SUPERADMIN_PROJECT_ID');
-  const clientEmail =
-    process.env.FIREBASE_ACCESS_CLIENT_EMAIL?.trim() || requireEnv('FIREBASE_SUPERADMIN_CLIENT_EMAIL');
-  const privateKeyRaw =
-    process.env.FIREBASE_ACCESS_PRIVATE_KEY?.trim() || requireEnv('FIREBASE_SUPERADMIN_PRIVATE_KEY');
+  const projectId = requireEnv('FIREBASE_ACCESS_PROJECT_ID').trim();
+  const clientEmail = requireEnv('FIREBASE_ACCESS_CLIENT_EMAIL').trim();
+  const privateKeyRaw = requireEnv('FIREBASE_ACCESS_PRIVATE_KEY').trim();
   const databaseURL = process.env.FIREBASE_ACCESS_DATABASE_URL?.trim();
 
   accessApp = initializeApp(
