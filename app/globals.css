@@ -426,10 +426,43 @@ a {
   color: var(--muted);
 }
 
+input.placeholder-input {
+  width: 100%;
+  font: inherit;
+  outline: none;
+}
+
+input.placeholder-input:focus {
+  border-color: var(--brand);
+  background: #fff;
+}
+
 .placeholder-area {
   min-height: 120px;
   align-items: start;
   padding-top: 1rem;
+}
+
+.login-error {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #f0b6b6;
+  border-radius: 12px;
+  background: #fff1f1;
+  color: #9d2f2f;
+  font-size: 0.88rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .full {
