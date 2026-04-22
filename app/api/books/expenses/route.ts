@@ -61,9 +61,15 @@ export async function GET(req: NextRequest) {
   const session = await verifySession();
   if (!session) return apiError('Unauthorized', 401);
 
+  const month = req.nextUrl.searchParams.get('month');
+
   try {
-    const month = req.nextUrl.searchParams.get('month');
     const db = booksDb();
+
+    // If the books Firebase project is not configured, return empty list (not an error)
+    if (!db) {
+      return apiSuccess([]);
+    }
 
     for (const collectionName of EXPENSE_COLLECTIONS) {
       try {

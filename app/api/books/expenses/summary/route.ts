@@ -36,9 +36,15 @@ export async function GET(req: NextRequest) {
   const session = await verifySession();
   if (!session) return apiError('Unauthorized', 401);
 
+  const month = req.nextUrl.searchParams.get('month');
+
   try {
-    const month = req.nextUrl.searchParams.get('month');
     const db = booksDb();
+
+    // If the books Firebase project is not configured, return empty summary (not an error)
+    if (!db) {
+      return apiSuccess({ month, total: 0, count: 0, byCategory: [], configMissing: true });
+    }
 
     for (const collectionName of EXPENSE_COLLECTIONS) {
       try {
@@ -67,7 +73,7 @@ export async function GET(req: NextRequest) {
           return apiSuccess({ month, total, count, byCategory });
         }
       } catch {
-        // Try next collection
+        // Collection not accessible – try next
       }
     }
 
