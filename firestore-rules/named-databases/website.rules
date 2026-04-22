@@ -1,0 +1,48 @@
+// Firestore Security Rules for the "website" named database
+// Project: dgen-superadmin | Database ID: website
+// Deploy: firebase firestore:rules --database website --rules firestore-rules/named-databases/website.rules
+//
+// NOTE: Firebase Admin SDK (server-side) bypasses all rules below.
+// These rules apply only to direct client-side SDK access.
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Posts: public read, no client writes
+    match /posts/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Careers: public read, no client writes
+    match /careers/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Messages: allow public creates (contact form), no reads/updates/deletes
+    match /messages/{id} {
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message'])
+        && request.resource.data.name is string
+        && request.resource.data.email is string
+        && request.resource.data.message is string;
+      allow read, update, delete: if false;
+    }
+
+    // Applications: allow public creates (job applications), no reads/updates/deletes
+    match /applications/{id} {
+      allow create: if request.resource.data.keys().hasAll(['applicantName', 'applicantEmail', 'roleApplied'])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.applicantName is string
+        && request.resource.data.applicantEmail is string
+        && request.resource.data.roleApplied is string;
+      allow read, update, delete: if false;
+    }
+
+    // Deny all other collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

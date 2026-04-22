@@ -14,6 +14,8 @@ function getAccessApp(): App {
     return accessApp;
   }
 
+  const databaseURL = process.env.FIREBASE_ACCESS_DATABASE_URL?.trim();
+
   accessApp = initializeApp(
     {
       credential: cert({
@@ -21,7 +23,7 @@ function getAccessApp(): App {
         clientEmail: requireEnv('FIREBASE_ACCESS_CLIENT_EMAIL'),
         privateKey: requireEnv('FIREBASE_ACCESS_PRIVATE_KEY').replace(/\\n/g, '\n')
       }),
-      databaseURL: requireEnv('FIREBASE_ACCESS_DATABASE_URL')
+      ...(databaseURL ? { databaseURL } : {})
     },
     'access'
   );
@@ -31,4 +33,11 @@ function getAccessApp(): App {
 
 export const accessDb = () =>
   getFirestore(getAccessApp(), process.env.FIREBASE_ACCESS_DATABASE_ID ?? '(default)');
-export const accessRealtimeDb = () => getDatabase(getAccessApp());
+
+export const accessRealtimeDb = () => {
+  const databaseURL = process.env.FIREBASE_ACCESS_DATABASE_URL?.trim();
+  if (!databaseURL) {
+    throw new Error('[env] Missing required environment variable: FIREBASE_ACCESS_DATABASE_URL');
+  }
+  return getDatabase(getAccessApp());
+};
