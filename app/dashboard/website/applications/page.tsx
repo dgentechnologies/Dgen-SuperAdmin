@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { PremiumSelect, type PremiumSelectOption } from '@/components/premium-select';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
@@ -37,6 +38,12 @@ const FILTERS: Array<{ value: 'all' | AppStatus; label: string }> = [
   { value: 'shortlisted', label: 'Shortlisted' },
   { value: 'assigned', label: 'Assigned' },
   { value: 'rejected', label: 'Rejected' }
+];
+
+const QUEUE_FILTER_OPTIONS: PremiumSelectOption[] = [
+  { value: 'all', label: 'All queues' },
+  { value: 'unassigned', label: 'Unassigned' },
+  { value: 'assigned', label: 'Assigned' },
 ];
 
 export default function WebsiteApplicationsPage() {
@@ -178,15 +185,12 @@ export default function WebsiteApplicationsPage() {
         />
         <label>
           <span className="subtle">Queue</span>
-          <select
+          <PremiumSelect
             value={queueFilter}
-            onChange={(e) => setQueueFilter(e.target.value as 'all' | 'assigned' | 'unassigned')}
-            aria-label="Queue filter"
-          >
-            <option value="all">All queues</option>
-            <option value="unassigned">Unassigned</option>
-            <option value="assigned">Assigned</option>
-          </select>
+            options={QUEUE_FILTER_OPTIONS}
+            onChange={(nextValue) => setQueueFilter(nextValue as 'all' | 'assigned' | 'unassigned')}
+            ariaLabel="Queue filter"
+          />
         </label>
         <div className="filter-chip-row">
           {FILTERS.map((item) => (
@@ -364,20 +368,20 @@ export default function WebsiteApplicationsPage() {
           <form className="stack" style={{ marginTop: '1rem' }} onSubmit={submitAssign}>
             <label>
               Employee
-              <select
+              <PremiumSelect
                 value={assignPayload.employeeId}
-                onChange={(event) => setAssignPayload((prev) => ({ ...prev, employeeId: event.target.value }))}
-                aria-label="Select employee"
-                className="login-input"
-                required
-              >
-                <option value="">Select employee</option>
-                {employees.map((emp) => (
-                  <option key={emp.id} value={emp.id}>
-                    {emp.name} ({emp.employeeId})
-                  </option>
-                ))}
-              </select>
+                options={[
+                  { value: '', label: 'Select employee' },
+                  ...employees.map((employee) => ({
+                    value: employee.id,
+                    label: employee.name,
+                    description: employee.employeeId,
+                  })),
+                ]}
+                onChange={(nextValue) => setAssignPayload((previous) => ({ ...previous, employeeId: nextValue }))}
+                placeholder="Select employee"
+                ariaLabel="Select employee"
+              />
             </label>
 
             <label>

@@ -1,10 +1,18 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { PremiumSelect, type PremiumSelectOption } from '@/components/premium-select';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
 type LogAction = 'granted' | 'denied' | 'remote_unlock';
+
+const ACTION_FILTER_OPTIONS: PremiumSelectOption[] = [
+  { value: 'all', label: 'All actions' },
+  { value: 'granted', label: 'Granted' },
+  { value: 'denied', label: 'Denied' },
+  { value: 'remote_unlock', label: 'Remote unlock' },
+];
 
 interface AccessLog {
   id: string;
@@ -140,16 +148,12 @@ export default function AccessLogsPage() {
         </label>
         <label>
           <span className="subtle">Action type</span>
-          <select
+          <PremiumSelect
             value={actionFilter}
-            onChange={(event) => setActionFilter(event.target.value as 'all' | LogAction)}
-            aria-label="Action filter"
-          >
-            <option value="all">All actions</option>
-            <option value="granted">Granted</option>
-            <option value="denied">Denied</option>
-            <option value="remote_unlock">Remote unlock</option>
-          </select>
+            options={ACTION_FILTER_OPTIONS}
+            onChange={(nextValue) => setActionFilter(nextValue as 'all' | LogAction)}
+            ariaLabel="Action filter"
+          />
         </label>
         <div style={{ alignSelf: 'end' }}>
           <button type="button" className="btn btn-solid" onClick={exportCsv} aria-label="Export CSV">

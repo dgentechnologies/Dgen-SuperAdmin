@@ -2,10 +2,19 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { PremiumSelect, type PremiumSelectOption } from '@/components/premium-select';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
 type CareerStatus = 'open' | 'paused' | 'closed' | 'draft';
+
+const ROLE_STATUS_OPTIONS: PremiumSelectOption[] = [
+  { value: 'all', label: 'All statuses' },
+  { value: 'open', label: 'Open' },
+  { value: 'paused', label: 'Paused' },
+  { value: 'closed', label: 'Closed' },
+  { value: 'draft', label: 'Draft' },
+];
 
 interface Career {
   id: string;
@@ -203,13 +212,12 @@ export default function WebsiteCareersPage() {
         <div className="dashboard-filters" style={{ flex: 1, marginTop: 0 }}>
           <label>
             <span className="subtle">Role status</span>
-            <select value={status} onChange={(event) => setStatus(event.target.value as 'all' | CareerStatus)} aria-label="Role status filter">
-              <option value="all">All statuses</option>
-              <option value="open">Open</option>
-              <option value="paused">Paused</option>
-              <option value="closed">Closed</option>
-              <option value="draft">Draft</option>
-            </select>
+            <PremiumSelect
+              value={status}
+              options={ROLE_STATUS_OPTIONS}
+              onChange={(nextValue) => setStatus(nextValue as 'all' | CareerStatus)}
+              ariaLabel="Role status filter"
+            />
           </label>
         </div>
         <button className="btn btn-solid" style={{ fontSize: '0.8rem' }} onClick={() => router.push('/dashboard/website/careers/create')}>

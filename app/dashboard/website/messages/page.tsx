@@ -1,11 +1,19 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { PremiumSelect, type PremiumSelectOption } from '@/components/premium-select';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
 type MessageState = 'unread' | 'read' | 'replied';
 type Priority = 'high' | 'medium' | 'low';
+
+const MESSAGE_STATE_OPTIONS: PremiumSelectOption[] = [
+  { value: 'all', label: 'All states' },
+  { value: 'unread', label: 'Unread' },
+  { value: 'read', label: 'Read' },
+  { value: 'replied', label: 'Replied' },
+];
 
 interface WebsiteMessage {
   id: string;
@@ -183,16 +191,12 @@ export default function WebsiteMessagesPage() {
         />
         <label>
           <span className="subtle">State</span>
-          <select
+          <PremiumSelect
             value={stateFilter}
-            onChange={(event) => setStateFilter(event.target.value as 'all' | MessageState)}
-            aria-label="Message state filter"
-          >
-            <option value="all">All states</option>
-            <option value="unread">Unread</option>
-            <option value="read">Read</option>
-            <option value="replied">Replied</option>
-          </select>
+            options={MESSAGE_STATE_OPTIONS}
+            onChange={(nextValue) => setStateFilter(nextValue as 'all' | MessageState)}
+            ariaLabel="Message state filter"
+          />
         </label>
       </section>
 

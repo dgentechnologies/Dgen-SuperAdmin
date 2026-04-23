@@ -2,10 +2,20 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { PremiumSelect, type PremiumSelectOption } from '@/components/premium-select';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
 type PostStatus = 'draft' | 'published' | 'scheduled' | 'archived' | 'unknown';
+
+const POST_STATUS_OPTIONS: PremiumSelectOption[] = [
+  { value: 'all', label: 'All statuses' },
+  { value: 'draft', label: 'Draft' },
+  { value: 'published', label: 'Published' },
+  { value: 'scheduled', label: 'Scheduled' },
+  { value: 'archived', label: 'Archived' },
+  { value: 'unknown', label: 'Unknown' },
+];
 
 interface WebsitePost {
   id: string;
@@ -159,14 +169,12 @@ export default function WebsitePostsPage() {
           />
           <label>
             <span className="subtle">Status</span>
-            <select value={status} onChange={(event) => setStatus(event.target.value as 'all' | PostStatus)} aria-label="Status filter">
-              <option value="all">All statuses</option>
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-              <option value="scheduled">Scheduled</option>
-              <option value="archived">Archived</option>
-              <option value="unknown">Unknown</option>
-            </select>
+            <PremiumSelect
+              value={status}
+              options={POST_STATUS_OPTIONS}
+              onChange={(nextValue) => setStatus(nextValue as 'all' | PostStatus)}
+              ariaLabel="Status filter"
+            />
           </label>
         </div>
         <button

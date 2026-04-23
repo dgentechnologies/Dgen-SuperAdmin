@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { PremiumSelect, type PremiumSelectOption } from '@/components/premium-select';
 import { DashboardShell } from '@/components/site-shell';
 
 type CareerStatus = 'open' | 'paused' | 'closed' | 'draft';
@@ -42,6 +43,35 @@ const EMPTY_FORM: EditForm = {
   requirements: '',
   isActive: true,
 };
+
+const ROLE_TYPE_OPTIONS: PremiumSelectOption[] = [
+  { value: '', label: 'Select type' },
+  { value: 'full-time', label: 'Full-time' },
+  { value: 'part-time', label: 'Part-time' },
+  { value: 'internship', label: 'Internship' },
+  { value: 'contract', label: 'Contract' },
+];
+
+const WORK_MODE_OPTIONS: PremiumSelectOption[] = [
+  { value: '', label: 'Select mode' },
+  { value: 'remote', label: 'Remote' },
+  { value: 'onsite', label: 'Onsite' },
+  { value: 'hybrid', label: 'Hybrid' },
+];
+
+const COMPENSATION_OPTIONS: PremiumSelectOption[] = [
+  { value: '', label: 'Select compensation' },
+  { value: 'paid', label: 'Paid' },
+  { value: 'unpaid', label: 'Unpaid' },
+  { value: 'intern-paid', label: 'Intern Stipend' },
+];
+
+const CAREER_STATUS_OPTIONS: PremiumSelectOption[] = [
+  { value: 'draft', label: 'Draft' },
+  { value: 'open', label: 'Open' },
+  { value: 'paused', label: 'Paused' },
+  { value: 'closed', label: 'Closed' },
+];
 
 export default function EditCareerPage() {
   const { id } = useParams<{ id: string }>();
@@ -277,32 +307,34 @@ export default function EditCareerPage() {
 
             <label>
               <span className="subtle">Type</span>
-              <select value={form.type} onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}>
-                <option value="">Select type</option>
-                <option value="full-time">Full-time</option>
-                <option value="part-time">Part-time</option>
-                <option value="internship">Internship</option>
-                <option value="contract">Contract</option>
-              </select>
+              <PremiumSelect
+                value={form.type}
+                options={ROLE_TYPE_OPTIONS}
+                onChange={(nextValue) => setForm((current) => ({ ...current, type: nextValue }))}
+                placeholder="Select type"
+                ariaLabel="Role type"
+              />
             </label>
             <label>
               <span className="subtle">Work Mode</span>
-              <select value={form.workMode} onChange={(e) => setForm((f) => ({ ...f, workMode: e.target.value }))}>
-                <option value="">Select mode</option>
-                <option value="remote">Remote</option>
-                <option value="onsite">Onsite</option>
-                <option value="hybrid">Hybrid</option>
-              </select>
+              <PremiumSelect
+                value={form.workMode}
+                options={WORK_MODE_OPTIONS}
+                onChange={(nextValue) => setForm((current) => ({ ...current, workMode: nextValue }))}
+                placeholder="Select mode"
+                ariaLabel="Work mode"
+              />
             </label>
 
             <label>
               <span className="subtle">Compensation</span>
-              <select value={form.compensation} onChange={(e) => setForm((f) => ({ ...f, compensation: e.target.value as Compensation, amount: '', amountSpan: '' }))}>
-                <option value="">Select compensation</option>
-                <option value="paid">Paid</option>
-                <option value="unpaid">Unpaid</option>
-                <option value="intern-paid">Intern Stipend</option>
-              </select>
+              <PremiumSelect
+                value={form.compensation}
+                options={COMPENSATION_OPTIONS}
+                onChange={(nextValue) => setForm((current) => ({ ...current, compensation: nextValue as Compensation, amount: '', amountSpan: '' }))}
+                placeholder="Select compensation"
+                ariaLabel="Compensation"
+              />
             </label>
             <label>
               <span className="subtle">Duration</span>
@@ -360,12 +392,12 @@ export default function EditCareerPage() {
 
             <label>
               <span className="subtle">Status</span>
-              <select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as CareerStatus }))}>
-                <option value="draft">Draft</option>
-                <option value="open">Open</option>
-                <option value="paused">Paused</option>
-                <option value="closed">Closed</option>
-              </select>
+              <PremiumSelect
+                value={form.status}
+                options={CAREER_STATUS_OPTIONS}
+                onChange={(nextValue) => setForm((current) => ({ ...current, status: nextValue as CareerStatus }))}
+                ariaLabel="Status"
+              />
             </label>
 
             <label style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
