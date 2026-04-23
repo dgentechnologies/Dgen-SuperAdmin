@@ -115,8 +115,8 @@ export default function DashboardPage() {
   const openCareers      = useMemo(() => careers.filter(c => (c.status ?? 'open') === 'open').length, [careers]);
   const totalSpend       = Math.round(summary?.total ?? 0);
 
-  const n = (v: number) => loading ? 'â€”' : v.toLocaleString('en-IN');
-  const currency = (v: number) => loading ? 'â€”' : `â‚¹${v.toLocaleString('en-IN')}`;
+  const n = (v: number) => loading ? '-' : v.toLocaleString('en-IN');
+  const currency = (v: number) => loading ? '-' : new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v);
 
   const recentApps = useMemo(() => applications.slice(0, 5), [applications]);
 
