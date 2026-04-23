@@ -76,6 +76,13 @@ function IcActivity({ s = 14 }: { s?: number }) {
     </svg>
   );
 }
+function IcBarChart({ s = 14 }: { s?: number }) {
+  return (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
+    </svg>
+  );
+}
 function IcSettings({ s = 14 }: { s?: number }) {
   return (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -143,6 +150,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/dashboard/website/messages',     label: 'Messages',     icon: <IcMail /> },
       { href: '/dashboard/website/careers',      label: 'Careers',      icon: <IcBriefcase /> },
       { href: '/dashboard/website/applications', label: 'Applications', icon: <IcUsers /> },
+      { href: '/dashboard/website/analytics',   label: 'Analytics',    icon: <IcBarChart /> },
     ],
   },
   {

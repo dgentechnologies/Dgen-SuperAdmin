@@ -56,6 +56,9 @@ export default function WebsiteMessagesPage() {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [stateFilter, setStateFilter] = useState<'all' | MessageState>('all');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -85,6 +88,39 @@ export default function WebsiteMessagesPage() {
       cancelled = true;
     };
   }, []);
+
+  const handleDelete = async (id: string) => {
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/website/messages/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete message');
+      setMessages((prev) => prev.filter((m) => m.id !== id));
+      setConfirmId(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete message');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleMarkRead = async (id: string) => {
+    setUpdatingId(id);
+    try {
+      const res = await fetch(`/api/website/messages/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isRead: true, status: 'read' }),
+      });
+      if (!res.ok) throw new Error('Failed to update message');
+      setMessages((prev) =>
+        prev.map((m) => (m.id === id ? { ...m, isRead: true, status: 'read', replied: false } : m))
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update message');
+    } finally {
+      setUpdatingId(null);
+    }
+  };
 
   const filtered = useMemo(() => {
     return messages.filter((row) => {
@@ -173,6 +209,7 @@ export default function WebsiteMessagesPage() {
                   <th>State</th>
                   <th>Priority</th>
                   <th>Received</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -201,6 +238,47 @@ export default function WebsiteMessagesPage() {
                         </span>
                       </td>
                       <td className="mono">{toDateLabel(row.createdAt)}</td>
+                      <td>
+                        <span style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                          {state === 'unread' && (
+                            <button
+                              className="btn-ghost"
+                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+                              disabled={updatingId === row.id}
+                              onClick={() => handleMarkRead(row.id)}
+                            >
+                              {updatingId === row.id ? '…' : 'Mark Read'}
+                            </button>
+                          )}
+                          {confirmId === row.id ? (
+                            <>
+                              <button
+                                className="btn-danger"
+                                style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+                                disabled={deletingId === row.id}
+                                onClick={() => handleDelete(row.id)}
+                              >
+                                {deletingId === row.id ? 'Deleting…' : 'Confirm'}
+                              </button>
+                              <button
+                                className="btn-ghost"
+                                style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+                                onClick={() => setConfirmId(null)}
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              className="btn-ghost"
+                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem', color: 'var(--error)' }}
+                              onClick={() => setConfirmId(row.id)}
+                            >
+                              Delete
+                            </button>
+                          )}
+                        </span>
+                      </td>
                     </tr>
                   );
                 })}

@@ -50,6 +50,8 @@ export default function WebsitePostsPage() {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<'all' | PostStatus>('all');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -79,6 +81,20 @@ export default function WebsitePostsPage() {
       cancelled = true;
     };
   }, []);
+
+  const handleDelete = async (id: string) => {
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/website/posts/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete post');
+      setPosts((prev) => prev.filter((p) => p.id !== id));
+      setConfirmId(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete post');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const filtered = useMemo(() => {
     return posts.filter((row) => {
@@ -171,6 +187,7 @@ export default function WebsitePostsPage() {
                   <th>Author</th>
                   <th>Updated</th>
                   <th>Created</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -191,6 +208,35 @@ export default function WebsitePostsPage() {
                       <td>{row.authorName ?? row.author ?? 'Unknown author'}</td>
                       <td className="mono">{toDateLabel(row.updatedAt)}</td>
                       <td className="mono">{toDateLabel(row.createdAt)}</td>
+                      <td>
+                        {confirmId === row.id ? (
+                          <span style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+                            <button
+                              className="btn-danger"
+                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+                              disabled={deletingId === row.id}
+                              onClick={() => handleDelete(row.id)}
+                            >
+                              {deletingId === row.id ? 'Deleting…' : 'Confirm'}
+                            </button>
+                            <button
+                              className="btn-ghost"
+                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+                              onClick={() => setConfirmId(null)}
+                            >
+                              Cancel
+                            </button>
+                          </span>
+                        ) : (
+                          <button
+                            className="btn-ghost"
+                            style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem', color: 'var(--error)' }}
+                            onClick={() => setConfirmId(row.id)}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   );
                 })}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
@@ -20,6 +20,15 @@ interface Application {
   id: string;
   roleApplied?: string;
   status?: 'pending' | 'reviewed' | 'shortlisted' | 'assigned' | 'rejected';
+}
+
+interface CreateForm {
+  title: string;
+  department: string;
+  location: string;
+  status: CareerStatus;
+  type: string;
+  workMode: string;
 }
 
 function resolveStatus(value: string | undefined): CareerStatus {
@@ -48,12 +57,25 @@ function toDateLabel(value: unknown): string {
   return '-';
 }
 
+const EMPTY_FORM: CreateForm = { title: '', department: '', location: '', status: 'draft', type: '', workMode: '' };
+
 export default function WebsiteCareersPage() {
   const [roles, setRoles] = useState<Career[]>([]);
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<'all' | CareerStatus>('all');
+
+  // create form
+  const [showCreate, setShowCreate] = useState(false);
+  const [form, setForm] = useState<CreateForm>(EMPTY_FORM);
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+
+  // per-row actions
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -95,6 +117,73 @@ export default function WebsiteCareersPage() {
       cancelled = true;
     };
   }, []);
+
+  const handleCreate = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!form.title.trim()) return;
+    setCreating(true);
+    setCreateError(null);
+    try {
+      const res = await fetch('/api/website/careers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: form.title.trim(),
+          department: form.department.trim() || undefined,
+          location: form.location.trim() || undefined,
+          status: form.status,
+          type: form.type || undefined,
+          workMode: form.workMode || undefined,
+        }),
+      });
+      const body = (await res.json()) as ApiResult<{ id: string }>;
+      if (!res.ok || !body.success) throw new Error((body as { error?: string }).error ?? 'Failed to create listing');
+
+      // Optimistically append
+      setRoles((prev) => [
+        { id: body.data!.id, title: form.title, department: form.department || undefined, location: form.location || undefined, status: form.status, createdAt: new Date().toISOString() },
+        ...prev,
+      ]);
+      setForm(EMPTY_FORM);
+      setShowCreate(false);
+    } catch (err) {
+      setCreateError(err instanceof Error ? err.message : 'Failed to create listing');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const handleToggleStatus = async (id: string, current: CareerStatus) => {
+    const next: CareerStatus = current === 'open' ? 'paused' : 'open';
+    setTogglingId(id);
+    try {
+      const res = await fetch(`/api/website/careers/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: next }),
+      });
+      if (!res.ok) throw new Error('Failed to update status');
+      setRoles((prev) => prev.map((r) => (r.id === id ? { ...r, status: next } : r)));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update status');
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/website/careers/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete listing');
+      setRoles((prev) => prev.filter((r) => r.id !== id));
+      setConfirmId(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete listing');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const applicantsByRole = useMemo(() => {
     const map = new Map<string, number>();
@@ -159,28 +248,101 @@ export default function WebsiteCareersPage() {
         </article>
       </section>
 
-      <section className="dashboard-filters" style={{ marginTop: '1rem' }}>
-        <label>
-          <span className="subtle">Role status</span>
-          <select value={status} onChange={(event) => setStatus(event.target.value as 'all' | CareerStatus)} aria-label="Role status filter">
-            <option value="all">All statuses</option>
-            <option value="open">Open</option>
-            <option value="paused">Paused</option>
-            <option value="closed">Closed</option>
-            <option value="draft">Draft</option>
-          </select>
-        </label>
+      <section style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginTop: '1rem', flexWrap: 'wrap' }}>
+        <div className="dashboard-filters" style={{ flex: 1, marginTop: 0 }}>
+          <label>
+            <span className="subtle">Role status</span>
+            <select value={status} onChange={(event) => setStatus(event.target.value as 'all' | CareerStatus)} aria-label="Role status filter">
+              <option value="all">All statuses</option>
+              <option value="open">Open</option>
+              <option value="paused">Paused</option>
+              <option value="closed">Closed</option>
+              <option value="draft">Draft</option>
+            </select>
+          </label>
+        </div>
+        <button className="btn-primary" style={{ fontSize: '0.8rem' }} onClick={() => setShowCreate((v) => !v)}>
+          {showCreate ? 'Cancel' : '+ New Listing'}
+        </button>
       </section>
 
-      {error ? <div className="login-error">{error}</div> : null}
+      {/* Create form */}
+      {showCreate && (
+        <section className="panel" style={{ marginTop: '1rem' }}>
+          <h2 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '1rem' }}>Create Career Listing</h2>
+          {createError && <div className="login-error" style={{ marginBottom: '0.75rem' }}>{createError}</div>}
+          <form onSubmit={handleCreate} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <label style={{ gridColumn: '1 / -1' }}>
+              <span className="subtle">Job Title *</span>
+              <input
+                value={form.title}
+                onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                placeholder="e.g. Frontend Engineer"
+                required
+              />
+            </label>
+            <label>
+              <span className="subtle">Department</span>
+              <input
+                value={form.department}
+                onChange={(e) => setForm((f) => ({ ...f, department: e.target.value }))}
+                placeholder="e.g. Engineering"
+              />
+            </label>
+            <label>
+              <span className="subtle">Location</span>
+              <input
+                value={form.location}
+                onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
+                placeholder="e.g. Remote / Bengaluru"
+              />
+            </label>
+            <label>
+              <span className="subtle">Type</span>
+              <select value={form.type} onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}>
+                <option value="">Select type</option>
+                <option value="full-time">Full-time</option>
+                <option value="part-time">Part-time</option>
+                <option value="internship">Internship</option>
+                <option value="contract">Contract</option>
+              </select>
+            </label>
+            <label>
+              <span className="subtle">Work Mode</span>
+              <select value={form.workMode} onChange={(e) => setForm((f) => ({ ...f, workMode: e.target.value }))}>
+                <option value="">Select mode</option>
+                <option value="remote">Remote</option>
+                <option value="onsite">Onsite</option>
+                <option value="hybrid">Hybrid</option>
+              </select>
+            </label>
+            <label>
+              <span className="subtle">Initial Status</span>
+              <select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as CareerStatus }))}>
+                <option value="draft">Draft</option>
+                <option value="open">Open</option>
+                <option value="paused">Paused</option>
+                <option value="closed">Closed</option>
+              </select>
+            </label>
+            <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.5rem' }}>
+              <button type="submit" className="btn-primary" disabled={creating}>
+                {creating ? 'Creating…' : 'Create Listing'}
+              </button>
+            </div>
+          </form>
+        </section>
+      )}
 
-      <section className="panel" style={{ marginTop: error ? '1rem' : '0' }}>
+      {error ? <div className="login-error" style={{ marginTop: '1rem' }}>{error}</div> : null}
+
+      <section className="panel" style={{ marginTop: error ? '1rem' : '1rem' }}>
         {loading ? (
           <p className="subtle">Loading careers...</p>
         ) : filtered.length === 0 ? (
           <div className="empty-state">
             <strong>No career roles found</strong>
-            <p>Create or sync career entries in the website database to populate this table.</p>
+            <p>Create a new listing above or sync career entries in the website database.</p>
           </div>
         ) : (
           <div className="dashboard-table-scroll">
@@ -193,6 +355,7 @@ export default function WebsiteCareersPage() {
                   <th>Status</th>
                   <th>Applicants</th>
                   <th>Created</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -216,6 +379,47 @@ export default function WebsiteCareersPage() {
                       </td>
                       <td className="mono">{applicants.toLocaleString('en-IN')}</td>
                       <td className="mono">{toDateLabel(row.createdAt)}</td>
+                      <td>
+                        <span style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                          {(rowStatus === 'open' || rowStatus === 'paused') && (
+                            <button
+                              className="btn-ghost"
+                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+                              disabled={togglingId === row.id}
+                              onClick={() => handleToggleStatus(row.id, rowStatus)}
+                            >
+                              {togglingId === row.id ? '…' : rowStatus === 'open' ? 'Pause' : 'Open'}
+                            </button>
+                          )}
+                          {confirmId === row.id ? (
+                            <>
+                              <button
+                                className="btn-danger"
+                                style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+                                disabled={deletingId === row.id}
+                                onClick={() => handleDelete(row.id)}
+                              >
+                                {deletingId === row.id ? 'Deleting…' : 'Confirm'}
+                              </button>
+                              <button
+                                className="btn-ghost"
+                                style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+                                onClick={() => setConfirmId(null)}
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              className="btn-ghost"
+                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem', color: 'var(--error)' }}
+                              onClick={() => setConfirmId(row.id)}
+                            >
+                              Delete
+                            </button>
+                          )}
+                        </span>
+                      </td>
                     </tr>
                   );
                 })}
