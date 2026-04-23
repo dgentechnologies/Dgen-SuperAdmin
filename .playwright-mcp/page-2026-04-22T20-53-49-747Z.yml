@@ -1,0 +1,87 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - img "DGEN logo" [ref=e5]
+        - generic [ref=e6]:
+          - paragraph [ref=e7]: SuperAdmin
+          - paragraph [ref=e8]: Dgen Technologies
+      - navigation "Dashboard navigation" [ref=e9]:
+        - link "Overview" [ref=e10] [cursor=pointer]:
+          - /url: /dashboard
+        - generic [ref=e11]:
+          - paragraph [ref=e12]: Website
+          - link "Posts" [ref=e13] [cursor=pointer]:
+            - /url: /dashboard/website/posts
+            - generic [ref=e14]: Posts
+          - link "Messages" [ref=e15] [cursor=pointer]:
+            - /url: /dashboard/website/messages
+            - generic [ref=e16]: Messages
+          - link "Careers" [ref=e17] [cursor=pointer]:
+            - /url: /dashboard/website/careers
+            - generic [ref=e18]: Careers
+          - link "Applications" [ref=e19] [cursor=pointer]:
+            - /url: /dashboard/website/applications
+            - generic [ref=e20]: Applications
+        - generic [ref=e21]:
+          - paragraph [ref=e22]: Access
+          - link "Employees" [ref=e23] [cursor=pointer]:
+            - /url: /dashboard/access/employees
+            - generic [ref=e24]: Employees
+          - link "Logs" [ref=e25] [cursor=pointer]:
+            - /url: /dashboard/access/logs
+            - generic [ref=e26]: Logs
+          - link "Settings" [ref=e27] [cursor=pointer]:
+            - /url: /dashboard/access/settings
+            - generic [ref=e28]: Settings
+        - generic [ref=e29]:
+          - paragraph [ref=e30]: Books
+          - link "Expenses" [ref=e31] [cursor=pointer]:
+            - /url: /dashboard/books/expenses
+            - generic [ref=e32]: Expenses
+          - link "Reports" [ref=e33] [cursor=pointer]:
+            - /url: /dashboard/books/reports
+            - generic [ref=e34]: Reports
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - strong [ref=e38]: Signed in
+            - text: Authenticated SuperAdmin
+          - generic [ref=e39]: Secure
+        - button "Sign out" [ref=e40] [cursor=pointer]
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - paragraph [ref=e45]: Dashboard
+          - heading "Access Employees" [level=1] [ref=e46]
+          - paragraph [ref=e47]: Professional employee control center for RFID status, account governance, and compliance actions.
+        - generic [ref=e48]:
+          - generic [ref=e49]: Thursday, 23 April 2026
+          - generic [ref=e50]: Live database views
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - article [ref=e53]:
+            - text: Active
+            - strong [ref=e54]: ...
+            - text: Employees with valid access
+          - article [ref=e55]:
+            - text: Banned
+            - strong [ref=e56]: ...
+            - text: Restricted RFID profiles
+          - article [ref=e57]:
+            - text: Directory
+            - strong [ref=e58]: ...
+            - text: Total registered employees
+          - article [ref=e59]:
+            - text: Search Result
+            - strong [ref=e60]: ...
+            - text: Matching current filter
+        - generic [ref=e61]:
+          - textbox "Search employees" [ref=e62]:
+            - /placeholder: Search by name, ID, role, or email
+          - generic [ref=e63]:
+            - button "Filter all" [ref=e64]: all
+            - button "Filter active" [ref=e65]: active
+            - button "Filter banned" [ref=e66]: banned
+        - paragraph [ref=e68]: Loading employees...
+  - alert [ref=e69]

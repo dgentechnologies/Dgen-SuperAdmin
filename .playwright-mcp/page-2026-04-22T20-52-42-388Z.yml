@@ -1,0 +1,110 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e19]
+  - main [ref=e20]:
+    - complementary [ref=e21]:
+      - generic [ref=e22]:
+        - img "DGEN logo" [ref=e23]
+        - generic [ref=e24]:
+          - paragraph [ref=e25]: SuperAdmin
+          - paragraph [ref=e26]: Dgen Technologies
+      - navigation "Dashboard navigation" [ref=e27]:
+        - link "Overview" [ref=e28] [cursor=pointer]:
+          - /url: /dashboard
+        - generic [ref=e29]:
+          - paragraph [ref=e30]: Website
+          - link "Posts" [ref=e31] [cursor=pointer]:
+            - /url: /dashboard/website/posts
+            - generic [ref=e32]: Posts
+          - link "Messages" [ref=e33] [cursor=pointer]:
+            - /url: /dashboard/website/messages
+            - generic [ref=e34]: Messages
+          - link "Careers" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/website/careers
+            - generic [ref=e36]: Careers
+          - link "Applications" [ref=e37] [cursor=pointer]:
+            - /url: /dashboard/website/applications
+            - generic [ref=e38]: Applications
+        - generic [ref=e39]:
+          - paragraph [ref=e40]: Access
+          - link "Employees" [ref=e41] [cursor=pointer]:
+            - /url: /dashboard/access/employees
+            - generic [ref=e42]: Employees
+          - link "Logs" [ref=e43] [cursor=pointer]:
+            - /url: /dashboard/access/logs
+            - generic [ref=e44]: Logs
+          - link "Settings" [ref=e45] [cursor=pointer]:
+            - /url: /dashboard/access/settings
+            - generic [ref=e46]: Settings
+        - generic [ref=e47]:
+          - paragraph [ref=e48]: Books
+          - link "Expenses" [ref=e49] [cursor=pointer]:
+            - /url: /dashboard/books/expenses
+            - generic [ref=e50]: Expenses
+          - link "Reports" [ref=e51] [cursor=pointer]:
+            - /url: /dashboard/books/reports
+            - generic [ref=e52]: Reports
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - strong [ref=e56]: Signed in
+            - text: Authenticated SuperAdmin
+          - generic [ref=e57]: Secure
+        - button "Sign out" [ref=e58] [cursor=pointer]
+    - generic [ref=e60]:
+      - generic [ref=e61]:
+        - generic [ref=e62]:
+          - paragraph [ref=e63]: Dashboard
+          - heading "DGEN SuperAdmin Dashboard" [level=1] [ref=e64]
+          - paragraph [ref=e65]: Unified monitoring for website operations, access control, and books with live Firestore-backed metrics.
+        - generic [ref=e66]:
+          - generic [ref=e67]: Thursday, 23 April 2026
+          - generic [ref=e68]: Live database views
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - article [ref=e71]:
+            - text: Website
+            - strong [ref=e72]: "0"
+            - text: Total posts
+          - article [ref=e73]:
+            - text: Access
+            - strong [ref=e74]: "0"
+            - text: Active employees
+          - article [ref=e75]:
+            - text: Books
+            - strong [ref=e76]: Rs 0
+            - text: Current tracked spend
+          - article [ref=e77]:
+            - text: Applications
+            - strong [ref=e78]: "0"
+            - text: Pending reviews
+        - generic [ref=e79]:
+          - article [ref=e80]:
+            - text: System Health
+            - strong [ref=e81]: Module status
+            - generic [ref=e82]:
+              - generic [ref=e83]: "Website: Operational"
+              - generic [ref=e84]: "Access: Operational"
+              - generic [ref=e85]: "Books: Error"
+          - article [ref=e86]:
+            - text: Quick Actions
+            - heading "Operational shortcuts" [level=2] [ref=e87]
+            - paragraph [ref=e88]: Use the left navigation to review applications, ban or unban employees, monitor access logs, and inspect books spend with synced backend data.
+            - generic [ref=e89]:
+              - generic [ref=e90]: Live APIs
+              - generic [ref=e91]: Auth protected
+              - generic [ref=e92]: Premium dark UI
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - paragraph [ref=e95]: Placeholder Table
+            - heading "Recent application activity" [level=2] [ref=e96]
+          - table [ref=e98]:
+            - rowgroup [ref=e99]:
+              - row "Application ID Status Created" [ref=e100]:
+                - columnheader "Application ID" [ref=e101]
+                - columnheader "Status" [ref=e102]
+                - columnheader "Created" [ref=e103]
+            - rowgroup [ref=e104]:
+              - row "No applications - -" [ref=e105]:
+                - cell "No applications" [ref=e106]
+                - cell "-" [ref=e107]
+                - cell "-" [ref=e108]

@@ -1,0 +1,88 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e78]
+  - main [ref=e79]:
+    - complementary [ref=e80]:
+      - generic [ref=e81]:
+        - img "DGEN logo" [ref=e82]
+        - generic [ref=e83]:
+          - paragraph [ref=e84]: SuperAdmin
+          - paragraph [ref=e85]: Dgen Technologies
+      - navigation "Dashboard navigation" [ref=e86]:
+        - link "Overview" [ref=e87] [cursor=pointer]:
+          - /url: /dashboard
+        - generic [ref=e88]:
+          - paragraph [ref=e89]: Website
+          - link "Posts" [ref=e90] [cursor=pointer]:
+            - /url: /dashboard/website/posts
+            - generic [ref=e91]: Posts
+          - link "Messages" [ref=e92] [cursor=pointer]:
+            - /url: /dashboard/website/messages
+            - generic [ref=e93]: Messages
+          - link "Careers" [ref=e94] [cursor=pointer]:
+            - /url: /dashboard/website/careers
+            - generic [ref=e95]: Careers
+          - link "Applications" [ref=e96] [cursor=pointer]:
+            - /url: /dashboard/website/applications
+            - generic [ref=e97]: Applications
+        - generic [ref=e98]:
+          - paragraph [ref=e99]: Access
+          - link "Employees" [ref=e100] [cursor=pointer]:
+            - /url: /dashboard/access/employees
+            - generic [ref=e101]: Employees
+          - link "Logs" [ref=e102] [cursor=pointer]:
+            - /url: /dashboard/access/logs
+            - generic [ref=e103]: Logs
+          - link "Settings" [ref=e104] [cursor=pointer]:
+            - /url: /dashboard/access/settings
+            - generic [ref=e105]: Settings
+        - generic [ref=e106]:
+          - paragraph [ref=e107]: Books
+          - link "Expenses" [ref=e108] [cursor=pointer]:
+            - /url: /dashboard/books/expenses
+            - generic [ref=e109]: Expenses
+          - link "Reports" [ref=e110] [cursor=pointer]:
+            - /url: /dashboard/books/reports
+            - generic [ref=e111]: Reports
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - strong [ref=e115]: Signed in
+            - text: Authenticated SuperAdmin
+          - generic [ref=e116]: Secure
+        - button "Sign out" [ref=e117] [cursor=pointer]
+    - generic [ref=e119]:
+      - generic [ref=e120]:
+        - generic [ref=e121]:
+          - paragraph [ref=e122]: Dashboard
+          - heading "Careers" [level=1] [ref=e123]
+          - paragraph [ref=e124]: Live role catalog with hiring status and application pipeline mapping from website collections.
+        - generic [ref=e125]:
+          - generic [ref=e126]: Thursday, 23 April 2026
+          - generic [ref=e127]: Live database views
+      - generic [ref=e128]:
+        - generic [ref=e129]:
+          - article [ref=e130]:
+            - text: Open Roles
+            - strong [ref=e131]: ...
+            - text: Currently accepting applications
+          - article [ref=e132]:
+            - text: Paused Roles
+            - strong [ref=e133]: ...
+            - text: Temporarily halted
+          - article [ref=e134]:
+            - text: Pending Applications
+            - strong [ref=e135]: ...
+            - text: Applicants waiting for review
+          - article [ref=e136]:
+            - text: Visible Roles
+            - strong [ref=e137]: ...
+            - text: After status filter
+        - generic [ref=e139]:
+          - text: Role status
+          - combobox "Role status filter" [ref=e140]:
+            - option "All statuses" [selected]
+            - option "Open"
+            - option "Paused"
+            - option "Closed"
+            - option "Draft"
+        - paragraph [ref=e142]: Loading careers...
