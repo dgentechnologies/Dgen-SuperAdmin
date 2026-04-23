@@ -1,6 +1,7 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
@@ -65,12 +66,6 @@ export default function WebsiteCareersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<'all' | CareerStatus>('all');
-
-  // create form
-  const [showCreate, setShowCreate] = useState(false);
-  const [form, setForm] = useState<CreateForm>(EMPTY_FORM);
-  const [creating, setCreating] = useState(false);
-  const [createError, setCreateError] = useState<string | null>(null);
 
   // per-row actions
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -220,6 +215,8 @@ export default function WebsiteCareersPage() {
     [applications]
   );
 
+  const router = useRouter();
+
   return (
     <DashboardShell
       title="Careers"
@@ -261,78 +258,12 @@ export default function WebsiteCareersPage() {
             </select>
           </label>
         </div>
-        <button className="btn btn-solid" style={{ fontSize: '0.8rem' }} onClick={() => setShowCreate((v) => !v)}>
-          {showCreate ? 'Cancel' : '+ New Listing'}
+        <button className="btn btn-solid" style={{ fontSize: '0.8rem' }} onClick={() => router.push('/dashboard/website/careers/create')}>
+          + New Listing
         </button>
       </section>
 
-      {/* Create form */}
-      {showCreate && (
-        <section className="panel" style={{ marginTop: '1rem' }}>
-          <h2 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '1rem' }}>Create Career Listing</h2>
-          {createError && <div className="login-error" style={{ marginBottom: '0.75rem' }}>{createError}</div>}
-          <form onSubmit={handleCreate} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-            <label style={{ gridColumn: '1 / -1' }}>
-              <span className="subtle">Job Title *</span>
-              <input
-                value={form.title}
-                onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                placeholder="e.g. Frontend Engineer"
-                required
-              />
-            </label>
-            <label>
-              <span className="subtle">Department</span>
-              <input
-                value={form.department}
-                onChange={(e) => setForm((f) => ({ ...f, department: e.target.value }))}
-                placeholder="e.g. Engineering"
-              />
-            </label>
-            <label>
-              <span className="subtle">Location</span>
-              <input
-                value={form.location}
-                onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
-                placeholder="e.g. Remote / Bengaluru"
-              />
-            </label>
-            <label>
-              <span className="subtle">Type</span>
-              <select value={form.type} onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}>
-                <option value="">Select type</option>
-                <option value="full-time">Full-time</option>
-                <option value="part-time">Part-time</option>
-                <option value="internship">Internship</option>
-                <option value="contract">Contract</option>
-              </select>
-            </label>
-            <label>
-              <span className="subtle">Work Mode</span>
-              <select value={form.workMode} onChange={(e) => setForm((f) => ({ ...f, workMode: e.target.value }))}>
-                <option value="">Select mode</option>
-                <option value="remote">Remote</option>
-                <option value="onsite">Onsite</option>
-                <option value="hybrid">Hybrid</option>
-              </select>
-            </label>
-            <label>
-              <span className="subtle">Initial Status</span>
-              <select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as CareerStatus }))}>
-                <option value="draft">Draft</option>
-                <option value="open">Open</option>
-                <option value="paused">Paused</option>
-                <option value="closed">Closed</option>
-              </select>
-            </label>
-            <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.5rem' }}>
-              <button type="submit" className="btn btn-solid" disabled={creating}>
-                {creating ? 'Creating…' : 'Create Listing'}
-              </button>
-            </div>
-          </form>
-        </section>
-      )}
+      {/* Create form removed — use /dashboard/website/careers/create */}
 
       {error ? <div className="login-error" style={{ marginTop: '1rem' }}>{error}</div> : null}
 
@@ -381,6 +312,13 @@ export default function WebsiteCareersPage() {
                       <td className="mono">{toDateLabel(row.createdAt)}</td>
                       <td>
                         <span style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                          <button
+                            className="btn btn-soft"
+                            style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+                            onClick={() => router.push(`/dashboard/website/careers/${row.id}/edit`)}
+                          >
+                            Edit
+                          </button>
                           {(rowStatus === 'open' || rowStatus === 'paused') && (
                             <button
                               className="btn btn-soft"
