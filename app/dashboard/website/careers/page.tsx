@@ -261,7 +261,7 @@ export default function WebsiteCareersPage() {
             </select>
           </label>
         </div>
-        <button className="btn-primary" style={{ fontSize: '0.8rem' }} onClick={() => setShowCreate((v) => !v)}>
+        <button className="btn btn-solid" style={{ fontSize: '0.8rem' }} onClick={() => setShowCreate((v) => !v)}>
           {showCreate ? 'Cancel' : '+ New Listing'}
         </button>
       </section>
@@ -326,7 +326,7 @@ export default function WebsiteCareersPage() {
               </select>
             </label>
             <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.5rem' }}>
-              <button type="submit" className="btn-primary" disabled={creating}>
+              <button type="submit" className="btn btn-solid" disabled={creating}>
                 {creating ? 'Creating…' : 'Create Listing'}
               </button>
             </div>
@@ -383,7 +383,7 @@ export default function WebsiteCareersPage() {
                         <span style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
                           {(rowStatus === 'open' || rowStatus === 'paused') && (
                             <button
-                              className="btn-ghost"
+                              className="btn btn-soft"
                               style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
                               disabled={togglingId === row.id}
                               onClick={() => handleToggleStatus(row.id, rowStatus)}
@@ -394,7 +394,7 @@ export default function WebsiteCareersPage() {
                           {confirmId === row.id ? (
                             <>
                               <button
-                                className="btn-danger"
+                                className="btn btn-danger"
                                 style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
                                 disabled={deletingId === row.id}
                                 onClick={() => handleDelete(row.id)}
@@ -402,7 +402,7 @@ export default function WebsiteCareersPage() {
                                 {deletingId === row.id ? 'Deleting…' : 'Confirm'}
                               </button>
                               <button
-                                className="btn-ghost"
+                                className="btn btn-soft"
                                 style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
                                 onClick={() => setConfirmId(null)}
                               >
@@ -411,8 +411,8 @@ export default function WebsiteCareersPage() {
                             </>
                           ) : (
                             <button
-                              className="btn-ghost"
-                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem', color: 'var(--error)' }}
+                              className="btn btn-soft"
+                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem', color: 'var(--danger)' }}
                               onClick={() => setConfirmId(row.id)}
                             >
                               Delete

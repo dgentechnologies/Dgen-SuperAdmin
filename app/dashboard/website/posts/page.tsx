@@ -147,24 +147,34 @@ export default function WebsitePostsPage() {
         </article>
       </section>
 
-      <section className="dashboard-filters" style={{ marginTop: '1rem' }}>
-        <input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search title, slug, or author"
-          aria-label="Search posts"
-        />
-        <label>
-          <span className="subtle">Status</span>
-          <select value={status} onChange={(event) => setStatus(event.target.value as 'all' | PostStatus)} aria-label="Status filter">
-            <option value="all">All statuses</option>
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="archived">Archived</option>
-            <option value="unknown">Unknown</option>
-          </select>
-        </label>
+      <section style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginTop: '1rem', flexWrap: 'wrap' }}>
+        <div className="dashboard-filters" style={{ flex: 1, marginTop: 0 }}>
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search title, slug, or author"
+            aria-label="Search posts"
+          />
+          <label>
+            <span className="subtle">Status</span>
+            <select value={status} onChange={(event) => setStatus(event.target.value as 'all' | PostStatus)} aria-label="Status filter">
+              <option value="all">All statuses</option>
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="archived">Archived</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </label>
+        </div>
+        <button
+          className="btn btn-solid"
+          style={{ fontSize: '0.8rem', opacity: 0.55, cursor: 'not-allowed' }}
+          disabled
+          title="Blog post editor coming soon"
+        >
+          + Write New Post
+        </button>
       </section>
 
       {error ? <div className="login-error">{error}</div> : null}
@@ -212,7 +222,7 @@ export default function WebsitePostsPage() {
                         {confirmId === row.id ? (
                           <span style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                             <button
-                              className="btn-danger"
+                              className="btn btn-danger"
                               style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
                               disabled={deletingId === row.id}
                               onClick={() => handleDelete(row.id)}
@@ -220,7 +230,7 @@ export default function WebsitePostsPage() {
                               {deletingId === row.id ? 'Deleting…' : 'Confirm'}
                             </button>
                             <button
-                              className="btn-ghost"
+                              className="btn btn-soft"
                               style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
                               onClick={() => setConfirmId(null)}
                             >
@@ -229,8 +239,8 @@ export default function WebsitePostsPage() {
                           </span>
                         ) : (
                           <button
-                            className="btn-ghost"
-                            style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem', color: 'var(--error)' }}
+                            className="btn btn-soft"
+                            style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem', color: 'var(--danger)' }}
                             onClick={() => setConfirmId(row.id)}
                           >
                             Delete

@@ -242,7 +242,7 @@ export default function WebsiteMessagesPage() {
                         <span style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
                           {state === 'unread' && (
                             <button
-                              className="btn-ghost"
+                              className="btn btn-soft"
                               style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
                               disabled={updatingId === row.id}
                               onClick={() => handleMarkRead(row.id)}
@@ -253,7 +253,7 @@ export default function WebsiteMessagesPage() {
                           {confirmId === row.id ? (
                             <>
                               <button
-                                className="btn-danger"
+                                className="btn btn-danger"
                                 style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
                                 disabled={deletingId === row.id}
                                 onClick={() => handleDelete(row.id)}
@@ -261,7 +261,7 @@ export default function WebsiteMessagesPage() {
                                 {deletingId === row.id ? 'Deleting…' : 'Confirm'}
                               </button>
                               <button
-                                className="btn-ghost"
+                                className="btn btn-soft"
                                 style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
                                 onClick={() => setConfirmId(null)}
                               >
@@ -270,8 +270,8 @@ export default function WebsiteMessagesPage() {
                             </>
                           ) : (
                             <button
-                              className="btn-ghost"
-                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem', color: 'var(--error)' }}
+                              className="btn btn-soft"
+                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem', color: 'var(--danger)' }}
                               onClick={() => setConfirmId(row.id)}
                             >
                               Delete

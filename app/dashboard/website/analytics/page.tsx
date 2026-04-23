@@ -41,8 +41,8 @@ function BarRow({ label, value, max }: { label: string; value: number; max: numb
     <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.5rem', alignItems: 'center', marginBottom: '0.6rem' }}>
       <div>
         <div className="mono" style={{ fontSize: '0.8rem', marginBottom: '0.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</div>
-        <div style={{ height: '6px', background: 'var(--border)', borderRadius: '3px', overflow: 'hidden' }}>
-          <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent)', borderRadius: '3px', transition: 'width 0.4s' }} />
+        <div style={{ height: '6px', background: 'var(--line)', borderRadius: '3px', overflow: 'hidden' }}>
+          <div style={{ width: `${pct}%`, height: '100%', background: 'var(--brand)', borderRadius: '3px', transition: 'width 0.4s' }} />
         </div>
       </div>
       <span style={{ fontSize: '0.8rem', fontWeight: 600, minWidth: '3rem', textAlign: 'right' }}>{value.toLocaleString('en-IN')}</span>
@@ -68,13 +68,13 @@ function SparkLine({ trend }: { trend: TrendPoint[] }) {
         <polyline
           points={pts.join(' ')}
           fill="none"
-          stroke="var(--accent)"
+          stroke="var(--brand)"
           strokeWidth="1.5"
           strokeLinejoin="round"
           strokeLinecap="round"
         />
       </svg>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--muted)' }}>
         <span>{trend[0]?.date}</span>
         <span>{trend[trend.length - 1]?.date}</span>
       </div>
@@ -126,7 +126,7 @@ export default function WebsiteAnalyticsPage() {
           <button
             key={r}
             onClick={() => setRange(r)}
-            className={range === r ? 'btn-primary' : 'btn-ghost'}
+            className={range === r ? 'btn btn-solid' : 'btn btn-soft'}
             style={{ fontSize: '0.8rem', padding: '0.3rem 0.9rem' }}
           >
             {r === 365 ? '1 Year' : `${r} Days`}
