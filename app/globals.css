@@ -163,7 +163,8 @@ img { max-width: 100%; display: block; }
   object-fit: contain;
   object-position: center;
   display: block;
-  padding: 6px 12px;
+  padding: 4px 6px;
+  transform: scale(1.25);
 }
 
 /* Nav */
