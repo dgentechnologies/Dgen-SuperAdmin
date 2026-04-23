@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
@@ -50,6 +51,7 @@ export default function WebsitePostsPage() {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<'all' | PostStatus>('all');
+  const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
