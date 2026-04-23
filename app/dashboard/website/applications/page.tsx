@@ -43,6 +43,8 @@ export default function WebsiteApplicationsPage() {
   const [items, setItems] = useState<Application[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [filter, setFilter] = useState<'all' | AppStatus>('all');
+  const [search, setSearch] = useState('');
+  const [queueFilter, setQueueFilter] = useState<'all' | 'assigned' | 'unassigned'>('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -82,8 +84,20 @@ export default function WebsiteApplicationsPage() {
   }, []);
 
   const filtered = useMemo(
-    () => items.filter((item) => (filter === 'all' ? true : (item.status ?? 'pending') === filter)),
-    [items, filter]
+    () =>
+      items.filter((item) => {
+        const matchStatus = filter === 'all' ? true : (item.status ?? 'pending') === filter;
+        const matchQueue =
+          queueFilter === 'all'
+            ? true
+            : queueFilter === 'assigned'
+            ? !!item.assignedTo
+            : !item.assignedTo;
+        const haystack = `${item.applicantName} ${item.applicantEmail} ${item.roleApplied}`.toLowerCase();
+        const matchSearch = search ? haystack.includes(search.toLowerCase()) : true;
+        return matchStatus && matchQueue && matchSearch;
+      }),
+    [items, filter, queueFilter, search]
   );
 
   const pendingCount = useMemo(
@@ -156,6 +170,24 @@ export default function WebsiteApplicationsPage() {
       badges={{ '/dashboard/website/applications': pendingCount }}
     >
       <section className="dashboard-filters">
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search applicant name, email, or role"
+          aria-label="Search applications"
+        />
+        <label>
+          <span className="subtle">Queue</span>
+          <select
+            value={queueFilter}
+            onChange={(e) => setQueueFilter(e.target.value as 'all' | 'assigned' | 'unassigned')}
+            aria-label="Queue filter"
+          >
+            <option value="all">All queues</option>
+            <option value="unassigned">Unassigned</option>
+            <option value="assigned">Assigned</option>
+          </select>
+        </label>
         <div className="filter-chip-row">
           {FILTERS.map((item) => (
             <button
@@ -256,16 +288,60 @@ export default function WebsiteApplicationsPage() {
                               <p style={{ marginTop: '0.5rem' }}>
                                 <strong>Cover note:</strong> {row.coverNote || 'No cover note submitted.'}
                               </p>
-                              <p style={{ marginTop: '0.5rem' }}>
-                                <strong>Resume:</strong>{' '}
+                              {row.assignedTo && (
+                                <p style={{ marginTop: '0.5rem' }}>
+                                  <strong>Assigned to:</strong> {row.assignedTo.employeeName} ({row.assignedTo.employeeEmail})
+                                </p>
+                              )}
+                              <div style={{ marginTop: '0.75rem' }}>
+                                <strong>Resume:</strong>
                                 {row.resumeUrl ? (
-                                  <a href={row.resumeUrl} target="_blank" rel="noreferrer" className="status-ok">
-                                    Open document
-                                  </a>
+                                  (() => {
+                                    const isPdf =
+                                      row.resumeUrl.toLowerCase().endsWith('.pdf') ||
+                                      row.resumeUrl.toLowerCase().includes('.pdf?');
+                                    return isPdf ? (
+                                      <div style={{ marginTop: '0.5rem' }}>
+                                        <iframe
+                                          src={row.resumeUrl}
+                                          title={`Resume — ${row.applicantName}`}
+                                          style={{
+                                            width: '100%',
+                                            height: '520px',
+                                            border: '1px solid var(--line)',
+                                            borderRadius: '10px',
+                                            background: '#fff',
+                                          }}
+                                          aria-label={`PDF resume for ${row.applicantName}`}
+                                        />
+                                        <a
+                                          href={row.resumeUrl}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="btn btn-soft"
+                                          style={{ marginTop: '0.5rem', fontSize: '0.78rem', display: 'inline-flex' }}
+                                        >
+                                          Open in new tab ↗
+                                        </a>
+                                      </div>
+                                    ) : (
+                                      <span style={{ marginLeft: '0.4rem' }}>
+                                        <a
+                                          href={row.resumeUrl}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="btn btn-soft"
+                                          style={{ fontSize: '0.78rem' }}
+                                        >
+                                          Open / Download ↗
+                                        </a>
+                                      </span>
+                                    );
+                                  })()
                                 ) : (
-                                  'Not attached'
+                                  <span className="subtle" style={{ marginLeft: '0.4rem' }}>Not attached</span>
                                 )}
-                              </p>
+                              </div>
                             </div>
                           </td>
                         </tr>

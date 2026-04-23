@@ -59,6 +59,7 @@ export default function WebsiteMessagesPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -103,8 +104,14 @@ export default function WebsiteMessagesPage() {
     }
   };
 
+  const handleCopyEmail = (id: string, email: string) => {
+    navigator.clipboard.writeText(email).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1800);
+    });
+  };
+
   const handleMarkRead = async (id: string) => {
-    setUpdatingId(id);
     try {
       const res = await fetch(`/api/website/messages/${id}`, {
         method: 'PATCH',
@@ -240,6 +247,17 @@ export default function WebsiteMessagesPage() {
                       <td className="mono">{toDateLabel(row.createdAt)}</td>
                       <td>
                         <span style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                          {row.email && (
+                            <button
+                              className="btn btn-soft"
+                              style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem' }}
+                              onClick={() => handleCopyEmail(row.id, row.email!)}
+                              aria-label={`Copy email address for ${row.name ?? 'sender'}`}
+                              title={row.email}
+                            >
+                              {copiedId === row.id ? '✓ Copied' : 'Copy Email'}
+                            </button>
+                          )}
                           {state === 'unread' && (
                             <button
                               className="btn btn-soft"
