@@ -79,9 +79,3 @@ export async function GET(req: NextRequest) {
     return apiError('Internal server error', 500);
   }
 }
-    return apiSuccess({ month, total: 0, count: 0, byCategory: [] });
-  } catch (err) {
-    console.error('[books/expenses/summary]', err);
-    return apiError('Internal server error', 500);
-  }
-}
