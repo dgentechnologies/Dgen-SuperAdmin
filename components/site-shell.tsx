@@ -238,10 +238,6 @@ export function DashboardShell({
         {/* Brand */}
         <div className="sidebar-brand">
           <img src="/logo.png" alt="DGEN logo" className="sidebar-logo" />
-          <div className="sidebar-brand-text">
-            <p className="sidebar-brand-name">SuperAdmin</p>
-            <p className="sidebar-brand-sub">Dgen Technologies</p>
-          </div>
         </div>
 
         {/* Nav */}
