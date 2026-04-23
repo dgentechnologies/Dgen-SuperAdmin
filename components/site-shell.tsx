@@ -131,6 +131,7 @@ type NavItem = { href: Route; label: string; icon: ReactNode };
 
 type NavGroup = {
   key: string;
+  href: Route;
   title: string;
   color: string;
   shadowColor: string;
@@ -141,6 +142,7 @@ type NavGroup = {
 const NAV_GROUPS: NavGroup[] = [
   {
     key: 'website',
+    href: '/dashboard/website',
     title: 'Website',
     color: '#a78bfa',
     shadowColor: 'rgba(167,139,250,0.18)',
@@ -155,6 +157,7 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     key: 'access',
+    href: '/dashboard/access',
     title: 'Access Control',
     color: '#4ade80',
     shadowColor: 'rgba(74,222,128,0.18)',
@@ -167,6 +170,7 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     key: 'books',
+    href: '/dashboard/books',
     title: 'Books',
     color: '#38bdf8',
     shadowColor: 'rgba(56,189,248,0.18)',
@@ -200,7 +204,7 @@ export function DashboardShell({
   const defaultOpen = useMemo(() => {
     const open = new Set<string>();
     for (const group of NAV_GROUPS) {
-      if (group.items.some((item) => pathname.startsWith(item.href))) {
+      if (group.items.some((item) => pathname.startsWith(item.href)) || pathname === group.href) {
         open.add(group.key);
       }
     }
@@ -264,28 +268,38 @@ export function DashboardShell({
           {/* Accordion groups */}
           {NAV_GROUPS.map((group) => {
             const isOpen = openGroups.has(group.key);
-            const groupActive = group.items.some((item) => pathname.startsWith(item.href));
+            const groupActive = group.items.some((item) => pathname.startsWith(item.href)) || pathname === group.href;
             return (
               <div key={group.key} className="sidebar-group">
-                {/* Group header button */}
-                <button
-                  type="button"
-                  className={`sidebar-group-header ${groupActive ? 'sidebar-group-header-active' : ''}`}
-                  onClick={() => toggleGroup(group.key)}
-                  aria-expanded={isOpen}
+                {/* Split group header: Link (overview) + chevron button (toggle) */}
+                <div
+                  className={`sidebar-group-header-wrap ${groupActive ? 'sidebar-group-header-active' : ''}`}
                   style={{ '--group-color': group.color, '--group-shadow': group.shadowColor } as React.CSSProperties}
                 >
-                  <span className="sidebar-group-icon" style={{ color: group.color }}>
-                    {group.icon}
-                  </span>
-                  <span className="sidebar-group-title">{group.title}</span>
-                  <span
-                    className="sidebar-group-chevron"
-                    style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                  <Link
+                    href={group.href}
+                    className="sidebar-group-header-link"
                   >
-                    <IcChevronDown s={13} />
-                  </span>
-                </button>
+                    <span className="sidebar-group-icon" style={{ color: group.color }}>
+                      {group.icon}
+                    </span>
+                    <span className="sidebar-group-title">{group.title}</span>
+                  </Link>
+                  <button
+                    type="button"
+                    className="sidebar-group-chevron-btn"
+                    onClick={() => toggleGroup(group.key)}
+                    aria-expanded={isOpen}
+                    aria-label={`Toggle ${group.title} navigation`}
+                  >
+                    <span
+                      className="sidebar-group-chevron"
+                      style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                    >
+                      <IcChevronDown s={13} />
+                    </span>
+                  </button>
+                </div>
 
                 {/* Collapsible items */}
                 <div
