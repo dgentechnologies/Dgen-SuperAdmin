@@ -146,11 +146,11 @@ const NAV_GROUPS: NavGroup[] = [
     shadowColor: 'rgba(167,139,250,0.18)',
     icon: <IcGlobe s={15} />,
     items: [
-      { href: '/dashboard/website/posts',        label: 'Posts',        icon: <IcFileText /> },
+      { href: '/dashboard/website/posts',        label: 'Blog',         icon: <IcFileText /> },
       { href: '/dashboard/website/messages',     label: 'Messages',     icon: <IcMail /> },
+      { href: '/dashboard/website/analytics',    label: 'Performance',  icon: <IcBarChart /> },
       { href: '/dashboard/website/careers',      label: 'Careers',      icon: <IcBriefcase /> },
       { href: '/dashboard/website/applications', label: 'Applications', icon: <IcUsers /> },
-      { href: '/dashboard/website/analytics',   label: 'Analytics',    icon: <IcBarChart /> },
     ],
   },
   {

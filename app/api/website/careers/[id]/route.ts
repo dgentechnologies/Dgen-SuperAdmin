@@ -17,9 +17,37 @@ const updateCareerSchema = z.object({
   status: z.enum(['open', 'paused', 'closed', 'draft']).optional(),
   department: z.string().max(200).optional(),
   location: z.string().max(200).optional(),
+  type: z.string().max(100).optional(),
+  workMode: z.string().max(100).optional(),
 }).refine((d) => Object.values(d).some((v) => v !== undefined), {
   message: 'At least one field must be provided',
 });
+
+// ── GET – fetch single career ────────────────────────────────
+export async function GET(_req: NextRequest, { params }: RouteContext) {
+  const session = await verifySession();
+  if (!session) return apiError('Unauthorized', 401);
+
+  const { id } = await params;
+
+  try {
+    const db = websiteDb();
+
+    for (const colName of CAREER_COLLECTIONS) {
+      const ref = db.collection(colName).doc(id);
+      const snap = await ref.get();
+
+      if (snap.exists) {
+        return apiSuccess({ id: snap.id, ...snap.data() });
+      }
+    }
+
+    return apiError('Career listing not found', 404);
+  } catch (err) {
+    console.error('[website/careers/id GET]', err);
+    return apiError('Internal server error', 500);
+  }
+}
 
 // ── DELETE ────────────────────────────────────────────────────
 export async function DELETE(_req: NextRequest, { params }: RouteContext) {
@@ -80,6 +108,8 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
         if (parsed.data.status) updates.status = parsed.data.status;
         if (parsed.data.department) updates.department = parsed.data.department;
         if (parsed.data.location) updates.location = parsed.data.location;
+        if (parsed.data.type) updates.type = parsed.data.type;
+        if (parsed.data.workMode) updates.workMode = parsed.data.workMode;
 
         await ref.update(updates);
 
