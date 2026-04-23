@@ -23,15 +23,6 @@ interface Application {
   status?: 'pending' | 'reviewed' | 'shortlisted' | 'assigned' | 'rejected';
 }
 
-interface CreateForm {
-  title: string;
-  department: string;
-  location: string;
-  status: CareerStatus;
-  type: string;
-  workMode: string;
-}
-
 function resolveStatus(value: string | undefined): CareerStatus {
   const normalized = value?.toLowerCase();
   if (normalized === 'open' || normalized === 'paused' || normalized === 'closed' || normalized === 'draft') {
@@ -57,8 +48,6 @@ function toDateLabel(value: unknown): string {
 
   return '-';
 }
-
-const EMPTY_FORM: CreateForm = { title: '', department: '', location: '', status: 'draft', type: '', workMode: '' };
 
 export default function WebsiteCareersPage() {
   const [roles, setRoles] = useState<Career[]>([]);
@@ -112,41 +101,6 @@ export default function WebsiteCareersPage() {
       cancelled = true;
     };
   }, []);
-
-  const handleCreate = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!form.title.trim()) return;
-    setCreating(true);
-    setCreateError(null);
-    try {
-      const res = await fetch('/api/website/careers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: form.title.trim(),
-          department: form.department.trim() || undefined,
-          location: form.location.trim() || undefined,
-          status: form.status,
-          type: form.type || undefined,
-          workMode: form.workMode || undefined,
-        }),
-      });
-      const body = (await res.json()) as ApiResult<{ id: string }>;
-      if (!res.ok || !body.success) throw new Error((body as { error?: string }).error ?? 'Failed to create listing');
-
-      // Optimistically append
-      setRoles((prev) => [
-        { id: body.data!.id, title: form.title, department: form.department || undefined, location: form.location || undefined, status: form.status, createdAt: new Date().toISOString() },
-        ...prev,
-      ]);
-      setForm(EMPTY_FORM);
-      setShowCreate(false);
-    } catch (err) {
-      setCreateError(err instanceof Error ? err.message : 'Failed to create listing');
-    } finally {
-      setCreating(false);
-    }
-  };
 
   const handleToggleStatus = async (id: string, current: CareerStatus) => {
     const next: CareerStatus = current === 'open' ? 'paused' : 'open';

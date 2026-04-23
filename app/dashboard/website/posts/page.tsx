@@ -169,9 +169,8 @@ export default function WebsitePostsPage() {
         </div>
         <button
           className="btn btn-solid"
-          style={{ fontSize: '0.8rem', opacity: 0.55, cursor: 'not-allowed' }}
-          disabled
-          title="Blog post editor coming soon"
+          style={{ fontSize: '0.8rem' }}
+          onClick={() => router.push('/dashboard/website/posts/create')}
         >
           + Write New Post
         </button>
