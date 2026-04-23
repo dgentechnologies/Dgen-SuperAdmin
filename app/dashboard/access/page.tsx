@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import type { Route } from 'next';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
@@ -120,9 +121,9 @@ export default function AccessOverviewPage() {
 
   const recentLogs = useMemo(() => logs.slice(0, 6), [logs]);
 
-  const NAV_CARDS = [
+  const NAV_CARDS: Array<{ href: Route; icon: JSX.Element; title: string; desc: string; badge: string | null; badgeColor: string }> = [
     {
-      href: '/dashboard/access/employees',
+      href: '/dashboard/access/employees' as Route,
       icon: <IcIdCard />,
       title: 'Employees',
       desc: 'Manage staff RFID profiles, ban and unban accounts.',
@@ -130,7 +131,7 @@ export default function AccessOverviewPage() {
       badgeColor: bannedCount > 0 ? '#fb7185' : '#4ade80',
     },
     {
-      href: '/dashboard/access/logs',
+      href: '/dashboard/access/logs' as Route,
       icon: <IcActivity />,
       title: 'Access Logs',
       desc: 'Real-time entry and exit logs from RFID readers.',
@@ -138,7 +139,7 @@ export default function AccessOverviewPage() {
       badgeColor: '#38bdf8',
     },
     {
-      href: '/dashboard/access/settings',
+      href: '/dashboard/access/settings' as Route,
       icon: <IcSettings />,
       title: 'Settings',
       desc: 'Remote door unlock and access control configuration.',
@@ -225,7 +226,7 @@ export default function AccessOverviewPage() {
         <div className="panel" style={{ marginTop: '1.4rem', borderColor: 'rgba(74,222,128,0.18)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <h2 style={{ fontSize: '0.92rem', fontWeight: 700 }}>Recent Access Events</h2>
-            <Link href="/dashboard/access/logs" style={{ fontSize: '0.76rem', color: COLOR, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <Link href={'/dashboard/access/logs' as Route} style={{ fontSize: '0.76rem', color: COLOR, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
               View all <IcArrow />
             </Link>
           </div>
@@ -262,7 +263,7 @@ export default function AccessOverviewPage() {
             <h2 style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--danger)' }}>
               Banned Employees ({n(bannedCount)})
             </h2>
-            <Link href="/dashboard/access/employees" style={{ fontSize: '0.76rem', color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <Link href={'/dashboard/access/employees' as Route} style={{ fontSize: '0.76rem', color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
               Manage <IcArrow />
             </Link>
           </div>

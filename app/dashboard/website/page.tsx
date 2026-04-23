@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import type { Route } from 'next';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
@@ -124,9 +125,9 @@ export default function WebsiteOverviewPage() {
 
   const recentApps = useMemo(() => applications.slice(0, 6), [applications]);
 
-  const NAV_CARDS = [
+  const NAV_CARDS: Array<{ href: Route; icon: JSX.Element; title: string; desc: string; badge: string | null; badgeColor: string }> = [
     {
-      href: '/dashboard/website/posts',
+      href: '/dashboard/website/posts' as Route,
       icon: <IcFileText />,
       title: 'Blog Posts',
       desc: 'Create, publish and manage all website blog content.',
@@ -134,7 +135,7 @@ export default function WebsiteOverviewPage() {
       badgeColor: '#a78bfa',
     },
     {
-      href: '/dashboard/website/messages',
+      href: '/dashboard/website/messages' as Route,
       icon: <IcMail />,
       title: 'Messages',
       desc: 'Contact form submissions from visitors.',
@@ -142,7 +143,7 @@ export default function WebsiteOverviewPage() {
       badgeColor: '#fb7185',
     },
     {
-      href: '/dashboard/website/careers',
+      href: '/dashboard/website/careers' as Route,
       icon: <IcBriefcase />,
       title: 'Careers',
       desc: 'Job listings and internship role management.',
@@ -150,7 +151,7 @@ export default function WebsiteOverviewPage() {
       badgeColor: '#4ade80',
     },
     {
-      href: '/dashboard/website/applications',
+      href: '/dashboard/website/applications' as Route,
       icon: <IcUsers />,
       title: 'Applications',
       desc: 'Review and manage internship applications.',
@@ -158,7 +159,7 @@ export default function WebsiteOverviewPage() {
       badgeColor: '#fbbf24',
     },
     {
-      href: '/dashboard/website/analytics',
+      href: '/dashboard/website/analytics' as Route,
       icon: <IcBarChart />,
       title: 'Analytics',
       desc: 'Website performance metrics and traffic data.',
@@ -185,7 +186,7 @@ export default function WebsiteOverviewPage() {
           </div>
         </div>
         <Link
-          href="/dashboard/website/posts/create"
+          href={'/dashboard/website/posts/create' as Route}
           className="btn btn-soft"
           style={{ fontSize: '0.8rem', borderColor: 'rgba(167,139,250,0.28)', color: COLOR }}
         >
@@ -253,7 +254,7 @@ export default function WebsiteOverviewPage() {
         <div className="panel" style={{ marginTop: '1.4rem', borderColor: 'rgba(167,139,250,0.18)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <h2 style={{ fontSize: '0.92rem', fontWeight: 700 }}>Recent Applications</h2>
-            <Link href="/dashboard/website/applications" style={{ fontSize: '0.76rem', color: COLOR, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <Link href={'/dashboard/website/applications' as Route} style={{ fontSize: '0.76rem', color: COLOR, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
               View all <IcArrow />
             </Link>
           </div>

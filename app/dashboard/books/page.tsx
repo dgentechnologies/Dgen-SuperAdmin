@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import type { Route } from 'next';
 import { DashboardShell } from '@/components/site-shell';
 
 type ApiResult<T> = { success: boolean; data?: T; error?: string };
@@ -115,9 +116,9 @@ export default function BooksOverviewPage() {
 
   const recentRows = useMemo(() => rows.slice(0, 6), [rows]);
 
-  const NAV_CARDS = [
+  const NAV_CARDS: Array<{ href: Route; icon: JSX.Element; title: string; desc: string; badge: string | null; badgeColor: string }> = [
     {
-      href: '/dashboard/books/expenses',
+      href: '/dashboard/books/expenses' as Route,
       icon: <IcDollar />,
       title: 'Expenses',
       desc: 'Monthly transaction log with category breakdown.',
@@ -125,7 +126,7 @@ export default function BooksOverviewPage() {
       badgeColor: '#38bdf8',
     },
     {
-      href: '/dashboard/books/reports',
+      href: '/dashboard/books/reports' as Route,
       icon: <IcTrend />,
       title: 'Reports',
       desc: 'Financial summaries, trends and analytics.',
@@ -258,7 +259,7 @@ export default function BooksOverviewPage() {
         <div className="panel" style={{ borderColor: 'rgba(56,189,248,0.18)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <h2 style={{ fontSize: '0.92rem', fontWeight: 700 }}>Recent Transactions</h2>
-            <Link href="/dashboard/books/expenses" style={{ fontSize: '0.76rem', color: COLOR, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <Link href={'/dashboard/books/expenses' as Route} style={{ fontSize: '0.76rem', color: COLOR, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
               View all <IcArrow />
             </Link>
           </div>
