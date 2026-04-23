@@ -1,46 +1,11 @@
-import { App, cert, getApps, initializeApp } from 'firebase-admin/app';
+// All databases share the same Firebase project — reuse the superadmin app.
+// Only the named Firestore database ID differs per product.
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
-import { requireEnv } from '@/lib/utils/env';
+import { getSuperadminApp } from '@/lib/firebase/admin-superadmin';
 
-let websiteApp: App;
+// Default to 'website' so this works even if the env var is not set on Vercel.
+export const websiteDb = () =>
+  getFirestore(getSuperadminApp(), process.env.FIREBASE_WEBSITE_DATABASE_ID?.trim() ?? 'website');
 
-function getWebsiteApp(): App {
-  if (websiteApp) return websiteApp;
-
-  const existing = getApps().find((app) => app.name === 'website');
-  if (existing) {
-    websiteApp = existing;
-    return websiteApp;
-  }
-
-  const projectId = requireEnv('FIREBASE_WEBSITE_PROJECT_ID').trim();
-  const clientEmail = requireEnv('FIREBASE_WEBSITE_CLIENT_EMAIL').trim();
-  const privateKeyRaw = requireEnv('FIREBASE_WEBSITE_PRIVATE_KEY').trim();
-  const storageBucket =
-    process.env.FIREBASE_WEBSITE_STORAGE_BUCKET?.trim() || `${projectId}.firebasestorage.app`;
-
-  websiteApp = initializeApp(
-    {
-      credential: cert({
-        projectId,
-        clientEmail,
-        privateKey: privateKeyRaw.replace(/\\n/g, '\n')
-      }),
-      storageBucket
-    },
-    'website'
-  );
-
-  return websiteApp;
-}
-
-export const websiteDb = () => {
-  const dbId = process.env.FIREBASE_WEBSITE_DATABASE_ID?.trim() || '(default)';
-  try {
-    return getFirestore(getWebsiteApp(), dbId);
-  } catch {
-    return getFirestore(getWebsiteApp(), '(default)');
-  }
-};
-export const websiteStorage = () => getStorage(getWebsiteApp());
+export const websiteStorage = () => getStorage(getSuperadminApp());

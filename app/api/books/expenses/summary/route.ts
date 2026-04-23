@@ -41,11 +41,6 @@ export async function GET(req: NextRequest) {
   try {
     const db = booksDb();
 
-    // If the books Firebase project is not configured, return empty summary (not an error)
-    if (!db) {
-      return apiSuccess({ month, total: 0, count: 0, byCategory: [], configMissing: true });
-    }
-
     for (const collectionName of EXPENSE_COLLECTIONS) {
       try {
         const snap = await db.collectionGroup(collectionName).limit(1000).get();
@@ -77,7 +72,13 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // No data found in any known collection – return zero summary (not an error)
+    // No data found – return zero summary (not an error)
+    return apiSuccess({ month, total: 0, count: 0, byCategory: [] });
+  } catch (err) {
+    console.error('[books/expenses/summary]', err);
+    return apiError('Internal server error', 500);
+  }
+}
     return apiSuccess({ month, total: 0, count: 0, byCategory: [] });
   } catch (err) {
     console.error('[books/expenses/summary]', err);

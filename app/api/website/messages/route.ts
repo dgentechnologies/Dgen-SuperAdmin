@@ -3,7 +3,7 @@ import { verifySession } from '@/lib/auth/verify-session';
 import { websiteDb } from '@/lib/firebase/admin-website';
 import { apiError, apiSuccess } from '@/lib/utils/api-response';
 
-const MESSAGE_COLLECTIONS = ['messages', 'contactMessages'] as const;
+const MESSAGE_COLLECTIONS = ['messages', 'contactMessages', 'contacts', 'inquiries', 'submissions', 'forms'] as const;
 
 type RawMessage = {
   name?: string;
@@ -42,13 +42,14 @@ export async function GET(_req: NextRequest) {
   if (!session) return apiError('Unauthorized', 401);
 
   try {
+    const db = websiteDb();
     for (const collectionName of MESSAGE_COLLECTIONS) {
       try {
         let snap;
         try {
-          snap = await websiteDb().collection(collectionName).orderBy('createdAt', 'desc').limit(500).get();
+          snap = await db.collection(collectionName).orderBy('createdAt', 'desc').limit(500).get();
         } catch {
-          snap = await websiteDb().collection(collectionName).limit(500).get();
+          snap = await db.collection(collectionName).limit(500).get();
         }
 
         if (!snap.empty) {

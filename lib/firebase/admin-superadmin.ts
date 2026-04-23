@@ -5,7 +5,7 @@ import { requireEnv } from '@/lib/utils/env';
 
 let superadminApp: App;
 
-function getSuperadminApp(): App {
+export function getSuperadminApp(): App {
   if (superadminApp) return superadminApp;
 
   const existing = getApps().find((app) => app.name === 'superadmin');

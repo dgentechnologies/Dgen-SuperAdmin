@@ -66,11 +66,6 @@ export async function GET(req: NextRequest) {
   try {
     const db = booksDb();
 
-    // If the books Firebase project is not configured, return empty list (not an error)
-    if (!db) {
-      return apiSuccess([]);
-    }
-
     for (const collectionName of EXPENSE_COLLECTIONS) {
       try {
         // Use collectionGroup so we pick up subcollections under user docs too

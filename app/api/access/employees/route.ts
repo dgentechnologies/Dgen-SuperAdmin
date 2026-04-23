@@ -4,7 +4,7 @@ import { accessDb } from '@/lib/firebase/admin-access';
 import { apiError, apiSuccess } from '@/lib/utils/api-response';
 import type { CollectionReference, Query, DocumentData } from 'firebase-admin/firestore';
 
-const EMPLOYEE_COLLECTIONS = ['employees', 'users'] as const;
+const EMPLOYEE_COLLECTIONS = ['employees', 'users', 'members', 'staff', 'personnel'] as const;
 
 type RawEmployee = {
   name?: string;
